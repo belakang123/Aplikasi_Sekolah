@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekolah Digital - Aplikasi Pendidikan Terintegrasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .student-card {
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (Web) -->
+    <nav class="nav-gradient text-white hidden md:block">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital - Kotak biru navy dengan ikon buku putih di tengah" class="w-10 h-10 rounded">
+                    <span class="text-xl font-bold">Sekolah Digital</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="tes.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+                    <a href="jadwal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="absensi.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>Absensi
+                    </a>
+                    <a href="hafalan.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-book-quran mr-2"></i>Hafalan
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4 relative">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer" onclick="toggleProfileMenu()">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1973089b-fe1c-40dd-a6d0-117bffc0113b.png" alt="Foto profil pengguna" class="w-10 h-10 rounded-full border border-gray-300">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm leading-tight">Guru Ahmad</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-500 text-lg"></i>
+                    </div>
+
+                    <!-- Profile Dropdown Menu -->
+                    <div id="profileMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-10">
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil</a>
+                        <a href="daftar_siswa.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Daftar Siswa</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Keluar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 w-full bg-white shadow-lg">
+        <div class="flex justify-around py-3">
+            <a href="#" class="flex flex-col items-center text-blue-900">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs mt-1">Jadwal</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user-check text-xl"></i>
+                <span class="text-xs mt-1">Absensi</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-quran text-xl"></i>
+                <span class="text-xs mt-1">Hafalan</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Absensi Section -->
+    <section id="absensi" class="tab-content container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-semibold mb-6">Absensi Siswa</h2>
+        <div class="attendance-list" aria-live="polite" aria-relevant="additions removals">
+            <!-- Attendance checkboxes will be generated here -->
+        </div>
+        <button id="save-attendance" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
+            Simpan Absensi
+        </button>
+    </section>
+
+    <!-- Student List Modal -->
+    <div id="studentListModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-20">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Daftar Siswa</h3>
+                <button class="text-gray-500 hover:text-gray-700" onclick="closeStudentList()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="space-y-2 max-h-64 overflow-y-auto">
+                <li v-for="student in students" class="text-gray-700 border-b py-2">{{ student.name }} - {{ student.class }}</li>
+            </ul>
+            <div class="mt-4 text-right">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="closeStudentList()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            { id: 1, name: "Ahmad Fauzi", class: "7A", age: 13 },
+            { id: 2, name: "Siti Nurhaliza", class: "7B", age: 14 },
+            { id: 3, name: "Budi Santoso", class: "8A", age: 14 },
+            { id: 4, name: "Dewi Lestari", class: "8B", age: 15 }
+        ];
+
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        let attendance = JSON.parse(localStorage.getItem('attendanceApp') || '{}');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const dayName = days[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const dateElement = document.querySelector('.text-gray-600');
+            if (dateElement) {
+                dateElement.textContent = `${dayName}, ${day} ${month} ${year}`;
+            }
+
+            // Explicitly call renderAttendance to ensure it runs
+            renderAttendance();
+        });
+
+        function renderAttendance() {
+            const container = document.querySelector('.attendance-list');
+            if (!container) {
+                console.error('Attendance list container not found.');
+                return;
+            }
+            console.log('Attendance list container found:', container);
+            container.innerHTML = '';
+
+            // Create month selection dropdown
+            const bulanDiv = document.createElement('div');
+            bulanDiv.className = 'mb-4 flex items-center';
+
+            const bulanLabel = document.createElement('label');
+            bulanLabel.textContent = 'Pilih Bulan:';
+            bulanLabel.className = 'font-semibold mr-4';
+
+            const bulanSelect = document.createElement('select');
+            bulanSelect.id = 'bulan-absensi-app';
+            bulanSelect.className = 'p-2 border rounded-lg text-sm';
+
+            months.forEach((bulan, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx + 1;
+                opt.textContent = bulan;
+                bulanSelect.appendChild(opt);
+            });
+
+            // Set default selected month to the current month
+            const currentMonth = new Date().getMonth() + 1;
+            bulanSelect.value = currentMonth;
+
+            bulanDiv.appendChild(bulanLabel);
+            bulanDiv.appendChild(bulanSelect);
+            container.appendChild(bulanDiv);
+
+            let bulanAktif = parseInt(bulanSelect.value);
+            bulanSelect.addEventListener('change', function () {
+                bulanAktif = parseInt(this.value);
+                console.log('Selected month changed to:', bulanAktif);
+                renderAbsensiTableApp(bulanAktif);
+            });
+
+            renderAbsensiTableApp(bulanAktif);
+        }
+
+        function renderAbsensiTableApp(bulanAktif) {
+            const container = document.querySelector('.attendance-list');
+            if (!container) {
+                console.error('Attendance list container not found in renderAbsensiTableApp.');
+                return;
+            }
+            console.log('Rendering attendance table for month:', bulanAktif);
+
+            while (container.children.length > 1) container.removeChild(container.lastChild);
+
+            const hari = new Date(2025, bulanAktif, 0).getDate();
+            console.log('Number of days in the month:', hari);
+
+            // Create a scrollable wrapper for the table
+            const scrollWrapper = document.createElement('div');
+            scrollWrapper.className = 'overflow-x-auto';
+
+            const table = document.createElement('table');
+            table.className = 'absensi-table min-w-full bg-white rounded-lg shadow';
+
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            trHead.className = 'bg-gray-100 text-gray-700';
+            trHead.innerHTML = '<th class="py-3 px-4 text-left">Nama Siswa</th>';
+
+            for (let i = 1; i <= hari; i++) {
+                const th = document.createElement('th');
+                th.textContent = i;
+                th.style.minWidth = '40px';
+                th.className = 'py-3 px-4';
+                trHead.appendChild(th);
+            }
+
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            if (students.length === 0) {
+                console.warn('No students data available.');
+            }
+
+            students.forEach(student => {
+                console.log('Rendering row for student:', student);
+                const tr = document.createElement('tr');
+
+                const tdNama = document.createElement('td');
+                tdNama.textContent = student.name;
+                tdNama.className = 'py-3 px-4 border-b';
+                tr.appendChild(tdNama);
+
+                for (let h = 1; h <= hari; h++) {
+                    const td = document.createElement('td');
+                    td.style.textAlign = 'center';
+                    td.className = 'py-3 px-4 border-b';
+
+                    const status = attendance[bulanAktif]?.[student.id]?.[h] || '';
+                    const select = document.createElement('select');
+                    select.style = 'padding:2px 6px; border-radius:6px; font-size:13px; background:#f0f8ff; margin-top:4px;';
+                    ['', 'Hadir', 'Izin', 'Alfa'].forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt || '-';
+                        select.appendChild(option);
+                    });
+
+                    select.value = status;
+                    select.addEventListener('change', function () {
+                        if (!attendance[bulanAktif]) attendance[bulanAktif] = {};
+                        if (!attendance[bulanAktif][student.id]) attendance[bulanAktif][student.id] = {};
+                        attendance[bulanAktif][student.id][h] = select.value;
+                        localStorage.setItem('attendanceApp', JSON.stringify(attendance));
+                        synchronizeAttendanceSummary();
+                    });
+
+        function synchronizeAttendanceSummary() {
+            const attendanceData = [];
+            const currentMonth = new Date().getMonth() + 1;
+            if (attendance[currentMonth]) {
+                for (const studentId in attendance[currentMonth]) {
+                    const days = attendance[currentMonth][studentId];
+                    let statusCount = { 'Hadir': 0, 'Tidak Hadir': 0, 'Terlambat': 0 };
+                    for (const day in days) {
+                        const status = days[day];
+                        if (status === 'Hadir') statusCount['Hadir']++;
+                        else if (status === 'Izin' || status === 'Alfa') statusCount['Tidak Hadir']++;
+                        else if (status === 'Terlambat') statusCount['Terlambat']++;
+                    }
+                    attendanceData.push({
+                        id: parseInt(studentId),
+                        status: Object.keys(statusCount).reduce((a, b) => statusCount[a] > statusCount[b] ? a : b)
+                    });
+                }
+            }
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+        }
+
+                    td.appendChild(select);
+                    tr.appendChild(td);
+                }
+
+                console.log('Appending row to tbody:', tr);
+                tbody.appendChild(tr);
+            });
+
+            console.log('Appending tbody to table:', tbody);
+            table.appendChild(tbody);
+            console.log('Appending table to scrollWrapper:', table);
+            scrollWrapper.appendChild(table);
+            console.log('Appending scrollWrapper to container:', scrollWrapper);
+            container.appendChild(scrollWrapper);
+        }
+
+        document.getElementById('save-attendance').addEventListener('click', () => {
+            localStorage.setItem('attendanceApp', JSON.stringify(attendance));
+            // Synchronize summary attendance data for tes.html
+            const attendanceData = [];
+            const currentMonth = new Date().getMonth() + 1;
+            if (attendance[currentMonth]) {
+                for (const studentId in attendance[currentMonth]) {
+                    const days = attendance[currentMonth][studentId];
+                    let statusCount = { 'Hadir': 0, 'Tidak Hadir': 0, 'Terlambat': 0 };
+                    for (const day in days) {
+                        const status = days[day];
+                        if (status === 'Hadir') statusCount['Hadir']++;
+                        else if (status === 'Izin' || status === 'Alfa') statusCount['Tidak Hadir']++;
+                        else if (status === 'Terlambat') statusCount['Terlambat']++;
+                    }
+                    attendanceData.push({
+                        id: parseInt(studentId),
+                        status: Object.keys(statusCount).reduce((a, b) => statusCount[a] > statusCount[b] ? a : b)
+                    });
+                }
+            }
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            alert('Absensi berhasil disimpan!');
+        });
+
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profileMenu');
+            menu.classList.toggle('hidden');
+            console.log('toggleProfileMenu called. Menu visibility:', !menu.classList.contains('hidden'));
+        }
+
+        function showStudentList() {
+            document.getElementById('studentListModal').classList.remove('hidden');
+        }
+
+        function closeStudentList() {
+            document.getElementById('studentListModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Sekolah Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Card Hover Effect */
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Tab Underline Animation */
+        .tab-underline {
+            position: relative;
+        }
+        
+        .tab-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s;
+        }
+        
+        .tab-underline.active::after {
+            width: 100%;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header & Navigation -->
+        <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <img src="https://placehold.co/50x50" alt="Logo sekolah dengan desain modern berupa buku terbuka dengan latar belakang biru" class="h-10 w-10 rounded-full">
+                    <h1 class="text-xl font-bold">Sekolah Digital</h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="tab-underline active text-white font-medium">Dashboard</a>
+                    <a href="#" class="tab-underline text-white font-medium hover:text-blue-200">Absensi</a>
+                    <a href="#" class="tab-underline text-white font-medium hover:text-blue-200">Siswa</a>
+                    <a href="#" class="tab-underline text-white font-medium hover:text-blue-200">Jadwal</a>
+                    <a href="#" class="tab-underline text-white font-medium hover:text-blue-200">Hafalan</a>
+                    <div class="relative">
+                        <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none">
+                            <img src="https://placehold.co/40x40" alt="Foto profil guru dengan latar belakang biru dan ekspresi profesional" class="h-8 w-8 rounded-full">
+                            <span class="font-medium">Admin</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Profil</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Pengaturan</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Keluar</a>
+                        </div>
+                    </div>
+                </div>
+                <button id="mobileMenuButton" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden bg-blue-800 text-white md:hidden">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-2">
+                <a href="#" class="py-2 px-2 font-medium border-b border-blue-700">Dashboard</a>
+                <a href="#" class="py-2 px-2 font-medium border-b border-blue-700">Absensi</a>
+                <a href="#" class="py-2 px-2 font-medium border-b border-blue-700">Siswa</a>
+                <a href="#" class="py-2 px-2 font-medium border-b border-blue-700">Jadwal</a>
+                <a href="#" class="py-2 px-2 font-medium border-b border-blue-700">Hafalan</a>
+                <div class="pt-2 pb-3 border-t border-blue-700">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://placehold.co/40x40" alt="Foto profil versi kecil untuk tampilan mobile" class="h-8 w-8 rounded-full">
+                        <span class="font-medium">Admin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-6">
+            <!-- Dashboard Overview -->
+            <div class="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Total Siswa</p>
+                                <h3 class="text-2xl font-bold mt-1">145</h3>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-users text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-blue-600 font-medium flex items-center">
+                            <span>12 baru bulan ini</span>
+                            <i class="fas fa-arrow-up ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Kehadiran Hari Ini</p>
+                                <h3 class="text-2xl font-bold mt-1">89%</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-clipboard-check text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-green-600 font-medium flex items-center">
+                            <span>+3% dari kemarin</span>
+                            <i class="fas fa-arrow-up ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Target Hafalan</p>
+                                <h3 class="text-2xl font-bold mt-1">78%</h3>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-book-quran text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-purple-600 font-medium flex items-center">
+                            <span>5 siswa selesai</span>
+                            <i class="fas fa-check-circle ml-1 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover transition-all duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Kegiatan Hari Ini</p>
+                                <h3 class="text-2xl font-bold mt-1">3</h3>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i class="fas fa-calendar-day text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-yellow-600 font-medium">
+                            <span>Ujian Tahfiz 09:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div id="tabsNavigation" class="mb-6 flex space-x-6 border-b border-gray-200" style="display:none;">
+                <button id="tabAbsensi" class="tab-underline pb-3 px-1 font-medium text-gray-500 hover:text-blue-500 focus:outline-none">Absensi</button>
+                <button id="tabSiswa" class="tab-underline pb-3 px-1 font-medium text-gray-500 hover:text-blue-500 focus:outline-none">Daftar Siswa</button>
+                <button id="tabJadwal" class="tab-underline pb-3 px-1 font-medium text-gray-500 hover:text-blue-500 focus:outline-none">Jadwal Pelajaran</button>
+                <button id="tabHafalan" class="tab-underline pb-3 px-1 font-medium text-gray-500 hover:text-blue-500 focus:outline-none">Monitoring Hafalan</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div>
+                <!-- Absensi Tab -->
+                <div id="contentAbsensi" class="fade-in">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h3 class="font-bold text-lg">Absensi Harian</h3>
+                            <p class="text-gray-500 text-sm">Tanggal: 25 Juni 2023</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Siswa</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img src="https://placehold.co/40x40" alt="Foto siswa laki-laki dengan seragam sekolah dan ekspresi serius" class="h-10 w-10 rounded-full">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Ahmad Fauzi</div>
+                                                    <div class="text-sm text-gray-500">NIS: 2023001</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8-A</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hadir</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                            <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img src="https://placehold.co/40x40" alt="Foto siswa perempuan memakai jilbab dengan senyum ramah" class="h-10 w-10 rounded-full">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Siti Aminah</div>
+                                                    <div class="text-sm text-gray-500">NIS: 2023002</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8-A</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Izin</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                            <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img src="https://placehold.co/40x40" alt="Siswa laki-laki dengan kacamata dan ekspresi ceria" class="h-10 w-10 rounded-full">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Budi Santoso</div>
+                                                    <div class="text-sm text-gray-500">NIS: 2023003</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8-B</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Absen</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                            <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                            <p class="text-sm text-gray-500">Menampilkan 3 dari 145 siswa</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Sebelumnya</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Selanjutnya</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h3 class="font-bold text-lg">Statistik Absensi</h3>
+                            </div>
+                            <div class="p-6">
+                                <canvas id="attendanceChart" height="250"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h3 class="font-bold text-lg">Input Absensi Baru</h3>
+                            </div>
+                            <div class="p-6">
+                                <form>
+                                    <div class="mb-4">
+                                        <label for="studentSelect" class="block text-sm font-medium text-gray-700 mb-1">Pilih Siswa</label>
+                                        <select id="studentSelect" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">-- Pilih Siswa --</option>
+                                            <option value="1">Ahmad Fauzi (8-A)</option>
+                                            <option value="2">Siti Aminah (8-A)</option>
+                                            <option value="3">Budi Santoso (8-B)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                        <div class="mt-2 space-y-2">
+                                            <div class="flex items-center">
+                                                <input id="present" name="status" type="radio" checked class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                <label for="present" class="ml-2 block text-sm text-gray-700">Hadir</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="permit" name="status" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                <label for="permit" class="ml-2 block text-sm text-gray-700">Izin</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="sick" name="status" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                <label for="sick" class="ml-2 block text-sm text-gray-700">Sakit</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="absent" name="status" type="radio" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
+                                                <label for="absent" class="ml-2 block text-sm text-gray-700">Absen</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="attendanceDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                                        <input type="date" id="attendanceDate" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex justify-center">
+                                            <span>Simpan Absensi</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Daftar Siswa Tab (Hidden by default) -->
+                <div id="contentSiswa" class="hidden fade-in">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-lg">Daftar Siswa</h3>
+                                <p class="text-gray-500 text-sm">Total 145 siswa terdaftar</p>
+                            </div>
+                            <button class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center">
+                                <i class="fas fa-plus mr-2"></i>
+                                <span>Tambah Siswa</span>
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Siswa</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS/NISN</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wali Kelas</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img src="https://placehold.co/40x40" alt="Siswa perempuan berjilbab dengan ekspresi ceria" class="h-10 w-10 rounded-full">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Aisya Rahma</div>
+                                                    <div class="text-sm text-gray-500">aisya.rahma@email.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023101</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7-A</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bu Siti</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                            <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img src="https://placehold.co/40x40" alt="Siswa laki-laki dengan ekspresi serius dan rambut rapi" class="h-10 w-10 rounded-full">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Daffa Putra</div>
+                                                    <div class="text-sm text-gray-500">daffa.putra@email.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023102</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7-B</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pak Andi</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                            <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <img src="https://placehold.co/40x40" alt="Siswa perempuan berkacamata dengan senyum ramah" class="h-10 w-10 rounded-full">
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Zahra Nabila</div>
+                                                    <div class="text-sm text-gray-500">zahra.nabila@email.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023103</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7-C</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bu Dewi</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                            <button class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                            <p class="text-sm text-gray-500">Menampilkan 3 dari 145 siswa</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Sebelumnya</button>
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Selanjutnya</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Jadwal Pelajaran Tab (Hidden by default) -->
+                <div id="contentJadwal" class="hidden fade-in">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-lg">Jadwal Pelajaran</h3>
+                                <p class="text-gray-500 text-sm">Tahun Ajaran 2023/2024</p>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center">
+                                    <i class="fas fa-print mr-2"></i>
+                                    <span>Cetak</span>
+                                </button>
+                                <button class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    <span>Tambah Jadwal</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <ul class="flex flex-wrap -mb-px" id="scheduleTabs" role="tablist">
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block py-2 px-4 text-sm font-medium text-center text-blue-600 border-b-2 border-blue-600 rounded-t-lg active" id="monday-tab" data-tabs-target="#monday" type="button" role="tab" aria-controls="monday" aria-selected="true">Senin</button>
+                                    </li>
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="tuesday-tab" data-tabs-target="#tuesday" type="button" role="tab" aria-controls="tuesday" aria-selected="false">Selasa</button>
+                                    </li>
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="wednesday-tab" data-tabs-target="#wednesday" type="button" role="tab" aria-controls="wednesday" aria-selected="false">Rabu</button>
+                                    </li>
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="thursday-tab" data-tabs-target="#thursday" type="button" role="tab" aria-controls="thursday" aria-selected="false">Kamis</button>
+                                    </li>
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" id="friday-tab" data-tabs-target="#friday" type="button" role="tab" aria-controls="friday" aria-selected="false">Jumat</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="scheduleTabContent">
+                                <div class="hidden rounded-lg bg-gray-50 border border-gray-200" id="monday" role="tabpanel" aria-labelledby="monday-tab">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-100">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">7-A</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">7-B</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">7-C</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">07:00 - 07:45</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Matematika (Pak Andi)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bahasa Indonesia (Bu Siti)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">IPA (Bu Dewi)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">07:45 - 08:30</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Matematika (Pak Andi)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bahasa Indonesia (Bu Siti)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">IPA (Bu Dewi)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">08:30 - 09:15</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Istirahat</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Istirahat</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Istirahat</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">09:15 - 10:00</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tahfiz (Ust. Ahmad)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tahfiz (Ust. Ahmad)</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tahfiz (Ust. Ahmad)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="hidden rounded-lg bg-gray-50 border border-gray-200" id="tuesday" role="tabpanel" aria-labelledby="tuesday-tab">
+                                    <div class="p-4 flex items-center justify-center h-32">
+                                        <p class="text-gray-500">Pilih hari untuk melihat jadwal pelajaran</p>
+                                    </div>
+                                </div>
+                                <div class="hidden rounded-lg bg-gray-50 border border-gray-200" id="wednesday" role="tabpanel" aria-labelledby="wednesday-tab">
+                                    <div class="p-4 flex items-center justify-center h-32">
+                                        <p class="text-gray-500">Pilih hari untuk melihat jadwal pelajaran</p>
+                                    </div>
+                                </div>
+                                <div class="hidden rounded-lg bg-gray-50 border border-gray-200" id="thursday" role="tabpanel" aria-labelledby="thursday-tab">
+                                    <div class="p-4 flex items-center justify-center h-32">
+                                        <p class="text-gray-500">Pilih hari untuk melihat jadwal pelajaran</p>
+                                    </div>
+                                </div>
+                                <div class="hidden rounded-lg bg-gray-50 border border-gray-200" id="friday" role="tabpanel" aria-labelledby="friday-tab">
+                                    <div class="p-4 flex items-center justify-center h-32">
+                                        <p class="text-gray-500">Pilih hari untuk melihat jadwal pelajaran</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Monitoring Hafalan Tab (Hidden by default) -->
+                <div id="contentHafalan" class="hidden fade-in">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-lg">Monitoring Hafalan Siswa</h3>
+                                    <p class="text-gray-500 text-sm">Progres hafalan per kelas</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <select class="border border-gray-300 rounded-md py-1 px-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                        <option>Semua Kelas</option>
+                                        <option>7-A</option>
+                                        <option>7-B</option>
+                                        <option>7-C</option>
+                                        <option>8-A</option>
+                                    </select>
+                                    <button class="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500 text-sm flex items-center">
+                                        <i class="fas fa-filter mr-1"></i>
+                                        <span>Filter</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Siswa</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Juz</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progres</th>
+                                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                            <img src="https://placehold.co/40x40" alt="Siswa laki-laki mengenakan peci dengan ekspresi serius" class="h-10 w-10 rounded-full">
+                                                        </div>
+                                                        <div class="ml-4">
+                                                            <div class="text-sm font-medium text-gray-900">Faris Iqbal</div>
+                                                            <div class="text-sm text-gray-500">NIS: 2023101</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7-A</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Juz 30</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                        <div class="bg-green-600 h-2.5 rounded-full" style="width: 85%"></div>
+                                                    </div>
+                                                    <span class="text-xs text-gray-500 mt-1 block">85% (17/20 halaman)</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button class="text-blue-600 hover:text-blue-900 mr-2">Detail</button>
+                                                    <button class="text-yellow-600 hover:text-yellow-900">Ubah</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                            <img src="https://placehold.co/40x40" alt="Siswa perempuan berjilbab dengan ekspresi ceria dan bersemangat" class="h-10 w-10 rounded-full">
+                                                        </div>
+                                                        <div class="ml-4">
+                                                            <div class="text-sm font-medium text-gray-900">Zahra Naila</div>
+                                                            <div class="text-sm text-gray-500">NIS: 2023102</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7-A</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Juz 29</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 60%"></div>
+                                                    </div>
+                                                    <span class="text-xs text-gray-500 mt-1 block">60% (12/20 halaman)</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button class="text-blue-600 hover:text-blue-900 mr-2">Detail</button>
+                                                    <button class="text-yellow-600 hover:text-yellow-900">Ubah</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                            <img src="https://placehold.co/40x40" alt="Siswa laki-laki dengan kacamata dan ekspresi serius" class="h-10 w-10 rounded-full">
+                                                        </div>
+                                                        <div class="ml-4">
+                                                            <div class="text-sm font-medium text-gray-900">Aditya Putra</div>
+                                                            <div class="text-sm text-gray-500">NIS: 2023103</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">7-B</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Juz 30</td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                                        <div class="bg-green-600 h-2.5 rounded-full" style="width: 95%"></div>
+                                                    </div>
+                                                    <span class="text-xs text-gray-500 mt-1 block">95% (19/20 halaman)</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <button class="text-blue-600 hover:text-blue-900 mr-2">Detail</button>
+                                                    <button class="text-yellow-600 hover:text-yellow-900">Ubah</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                                    <p class="text-sm text-gray-500">Menampilkan 3 dari 145 siswa</p>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Sebelumnya</button>
+                                        <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Selanjutnya</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-100">
+                                <h3 class="font-bold text-lg">Tambah Catatan Hafalan</h3>
+                            </div>
+                            <div class="p-6">
+                                <form>
+                                    <div class="mb-4">
+                                        <label for="hifzStudent" class="block text-sm font-medium text-gray-700 mb-1">Siswa</label>
+                                        <select id="hifzStudent" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">-- Pilih Siswa --</option>
+                                            <option value="1">Faris Iqbal (7-A)</option>
+                                            <option value="2">Zahra Naila (7-A)</option>
+                                            <option value="3">Aditya Putra (7-B)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="hifzJuz" class="block text-sm font-medium text-gray-700 mb-1">Juz</label>
+                                        <select id="hifzJuz" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">-- Pilih Juz --</option>
+                                            <option value="30">Juz 30</option>
+                                            <option value="29">Juz 29</option>
+                                            <option value="28">Juz 28</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="hifzPage" class="block text-sm font-medium text-gray-700 mb-1">Halaman/Hizb</label>
+                                        <input type="text" id="hifzPage" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 1-5 atau Hizb 1">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="hifzDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Setor</label>
+                                        <input type="date" id="hifzDate" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="hifzNote" class="block text-sm font-medium text-gray-700 mb-1">Catatan Guru</label>
+                                        <textarea id="hifzNote" rows="3" class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan catatan evaluasi hafalan"></textarea>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex justify-center">
+                                            <span>Simpan Hafalan</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-sm text-gray-600">© 2023 Sekolah Digital. All rights reserved.</p>
+                    </div>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Fungsi untuk menampilkan dashboard dan menyembunyikan tab navigation
+        function showDashboard() {
+            // Tampilkan dashboard overview
+            const dashboard = document.querySelector('.mb-8.grid');
+            if (dashboard) dashboard.style.display = '';
+            // Sembunyikan tab navigation
+            document.getElementById('tabsNavigation').style.display = 'none';
+            // Sembunyikan semua tab konten
+            ['contentAbsensi','contentSiswa','contentJadwal','contentHafalan'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+        }
+
+        // Fungsi untuk menampilkan tab navigation dan menyembunyikan dashboard
+        function showTabs(tabName) {
+            // Sembunyikan dashboard overview
+            const dashboard = document.querySelector('.mb-8.grid');
+            if (dashboard) dashboard.style.display = 'none';
+            // Tampilkan tab navigation
+            document.getElementById('tabsNavigation').style.display = '';
+            // Sembunyikan semua tab konten
+            ['contentAbsensi','contentSiswa','contentJadwal','contentHafalan'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            if (tabName) {
+                const el = document.getElementById('content'+tabName);
+                if (el) el.classList.remove('hidden');
+            }
+        }
+
+        // Navbar Tab Switching
+        const navbarTabLinks = document.querySelectorAll('header .tab-underline');
+        const tabMap = ['Dashboard', 'Absensi', 'Siswa', 'Jadwal', 'Hafalan'];
+        navbarTabLinks.forEach((btn, idx) => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (tabMap[idx] === 'Dashboard') {
+              showDashboard();
+            } else {
+              showTabs(tabMap[idx]);
+              // Trigger render for tab content
+              if (tabMap[idx] === 'Absensi') renderAttendanceMain();
+              if (tabMap[idx] === 'Siswa') renderStudentListMain();
+              if (tabMap[idx] === 'Jadwal') renderScheduleMain();
+              if (tabMap[idx] === 'Hafalan') renderMonitoringMain();
+            }
+          });
+        });
+
+        // Saat halaman pertama kali dibuka, tampilkan dashboard
+        window.addEventListener('DOMContentLoaded', showDashboard);
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // User Menu Toggle
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userMenu = document.getElementById('userMenu');
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+        
+        // Schedule Day Tabs
+        const scheduleTabs = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        
+        scheduleTabs.forEach(day => {
+            const tabButton = document.getElementById(`${day}-tab`);
+            const content = document.getElementById(day);
+            
+            if (tabButton) {
+                tabButton.addEventListener('click', () => {
+                    // Reset all tabs
+                    scheduleTabs.forEach(d => {
+                        const btn = document.getElementById(`${d}-tab`);
+                        const cnt = document.getElementById(d);
+                        if (btn) btn.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                        if (btn) btn.classList.add('text-gray-500', 'border-transparent');
+                        if (cnt) cnt.classList.add('hidden');
+                    });
+                    
+                    // Activate current tab
+                    tabButton.classList.add('active', 'text-blue-600', 'border-blue-600');
+                    tabButton.classList.remove('text-gray-500', 'border-transparent');
+                    content.classList.remove('hidden');
+                });
+            }
+        });
+        
+        // Underline Animation for Menu Items
+        const menuItems = document.querySelectorAll('.tab-underline');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                if (!item.classList.contains('active')) {
+                    item.classList.add('hover:after:w-full');
+                }
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                if (!item.classList.contains('active')) {
+                    item.classList.remove('hover:after:w-full');
+                }
+            });
+        });
+        
+        // Attendance Chart
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Hadir',
+                        data: [92, 90, 88, 93, 91, 89],
+                        backgroundColor: '#10B981',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Izin',
+                        data: [5, 7, 8, 4, 6, 7],
+                        backgroundColor: '#F59E0B',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Sakit',
+                        data: [2, 2, 3, 2, 2, 3],
+                        backgroundColor: '#3B82F6',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Absen',
+                        data: [1, 1, 1, 1, 1, 1],
+                        backgroundColor: '#EF4444',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Statistik Kehadiran 6 Bulan Terakhir (%)',
+                        font: {
+                            size: 16
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Card hover effect
+        const cards = document.querySelectorAll('.card-hover');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'all 0.3s ease';
+            });
+        });
+
+        // Navbar Tab Switching
+        const navbarTabLinks = document.querySelectorAll('header .tab-underline');
+        // Dashboard = index 0
+        const tabMap = ['Dashboard', 'Absensi', 'Siswa', 'Jadwal', 'Hafalan'];
+        navbarTabLinks.forEach((btn, idx) => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (tabMap[idx] === 'Dashboard') {
+              showDashboard();
+            } else {
+              const tabBtn = document.getElementById('tab' + tabMap[idx]);
+              if (tabBtn) tabBtn.click();
+            }
+          });
+        });
+
+        // Fungsi untuk menampilkan dashboard overview
+        function showDashboard() {
+          // Sembunyikan semua tab konten
+          ['Absensi', 'Siswa', 'Jadwal', 'Hafalan'].forEach(tab => {
+            document.getElementById('content' + tab).classList.add('hidden');
+            document.getElementById('tab' + tab).classList.remove('active', 'text-blue-600');
+            document.getElementById('tab' + tab).classList.add('text-gray-500');
+          });
+          // Tampilkan overview dashboard
+          document.querySelector('.mb-8.grid').style.display = '';
+        }
+
+        // Sembunyikan dashboard saat tab lain aktif
+        function hideDashboard() {
+          document.querySelector('.mb-8.grid').style.display = 'none';
+        }
+
+        // Modifikasi tab switching agar dashboard disembunyikan
+        tabs.forEach(tab => {
+            const tabButton = document.getElementById(`tab${tab}`);
+            const content = document.getElementById(`content${tab}`);
+            tabButton.addEventListener('click', () => {
+                // Reset all tabs
+                tabs.forEach(t => {
+                    document.getElementById(`tab${t}`).classList.remove('active', 'text-blue-600');
+                    document.getElementById(`tab${t}`).classList.add('text-gray-500');
+                    document.getElementById(`content${t}`).classList.add('hidden');
+                });
+                // Activate current tab
+                tabButton.classList.add('active', 'text-blue-600');
+                tabButton.classList.remove('text-gray-500');
+                content.classList.remove('hidden');
+                hideDashboard();
+            });
+        });
+
+        // Saat halaman pertama kali dibuka, tampilkan dashboard
+        window.addEventListener('DOMContentLoaded', showDashboard);
+
+        // === Fitur Absensi, Daftar Siswa, Jadwal Pelajaran, Monitoring Hafalan ===
+        // Data storage
+        let students = [
+          { id: 1, name: "Ahmad Fauzi", class: "7A", age: 13 },
+          { id: 2, name: "Siti Nurhaliza", class: "7B", age: 14 },
+          { id: 3, name: "Budi Santoso", class: "8A", age: 14 },
+          { id: 4, name: "Dewi Lestari", class: "8B", age: 15 }
+        ];
+        const months = [
+          "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+          "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        let attendance = JSON.parse(localStorage.getItem('attendanceApp') || '{}');
+        let schedule = JSON.parse(localStorage.getItem('scheduleApp') || '[]');
+        const hariPerBulan = {
+          1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
+        };
+        let hafalanData = JSON.parse(localStorage.getItem('hafalanApp') || '{}');
+
+        // Utility: create element with classes
+        function el(tag, classes = '', html = '') {
+          const e = document.createElement(tag);
+          if (classes) e.className = classes;
+          if (html) e.innerHTML = html;
+          return e;
+        }
+
+        // Render Absensi
+        function renderAttendanceMain() {
+          const container = document.getElementById('contentAbsensi');
+          if (!container) return;
+          container.innerHTML = '';
+          const bulanDiv = el('div', '', '');
+          bulanDiv.style.marginBottom = '16px';
+          bulanDiv.appendChild(el('label', '', 'Pilih Bulan: '));
+          const bulanSelect = el('select', 'border rounded px-2 py-1 ml-2');
+          months.forEach((bulan, idx) => {
+            const opt = el('option', '', bulan);
+            opt.value = idx+1;
+            bulanSelect.appendChild(opt);
+          });
+          bulanDiv.appendChild(bulanSelect);
+          container.appendChild(bulanDiv);
+          const tableDiv = el('div', 'overflow-x-auto');
+          container.appendChild(tableDiv);
+          function renderAbsensiTableMain(bulanAktif) {
+            tableDiv.innerHTML = '';
+            const hari = hariPerBulan[bulanAktif];
+            const table = el('table', 'min-w-full divide-y divide-gray-200');
+            const thead = el('thead', 'bg-gray-50');
+            const trHead = el('tr', '');
+            trHead.appendChild(el('th', 'px-2 py-2', 'Nama Siswa'));
+            for(let i=1; i<=hari; i++) {
+              trHead.appendChild(el('th', 'px-2 py-2', i));
+            }
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+            const tbody = el('tbody', 'bg-white divide-y divide-gray-200');
+            students.forEach(student => {
+              const tr = el('tr', '');
+              tr.appendChild(el('td', 'px-2 py-2 font-semibold', student.name));
+              for(let h=1; h<=hari; h++) {
+                const td = el('td', 'px-2 py-2 text-center');
+                const status = attendance[bulanAktif]?.[student.id]?.[h] || '';
+                let badge = '';
+                if(status === 'Hadir') badge = '<span style="color:#357ABD;font-weight:700;">H</span>';
+                else if(status === 'Izin') badge = '<span style="color:#fbc02d;font-weight:700;">I</span>';
+                else if(status === 'Alfa') badge = '<span style="color:#d32f2f;font-weight:700;">A</span>';
+                else badge = '<span style="color:#bbb;">-</span>';
+                td.innerHTML = badge;
+                const select = el('select', 'border rounded px-1 py-1 text-xs mt-1');
+                ['', 'Hadir', 'Izin', 'Alfa'].forEach(opt => {
+                  const option = el('option', '', opt || '-');
+                  option.value = opt;
+                  select.appendChild(option);
+                });
+                select.value = status;
+                select.addEventListener('change', function() {
+                  if(!attendance[bulanAktif]) attendance[bulanAktif] = {};
+                  if(!attendance[bulanAktif][student.id]) attendance[bulanAktif][student.id] = {};
+                  attendance[bulanAktif][student.id][h] = select.value;
+                  localStorage.setItem('attendanceApp', JSON.stringify(attendance));
+                  renderAbsensiTableMain(bulanAktif);
+                });
+                td.appendChild(select);
+                tr.appendChild(td);
+              }
+              tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            tableDiv.appendChild(table);
+          }
+          bulanSelect.addEventListener('change', function() {
+            renderAbsensiTableMain(parseInt(this.value));
+          });
+          renderAbsensiTableMain(parseInt(bulanSelect.value));
+        }
+
+        // Render Daftar Siswa
+        function renderStudentListMain() {
+          const container = document.getElementById('contentSiswa');
+          if (!container) return;
+          container.innerHTML = '';
+          const table = el('table', 'min-w-full divide-y divide-gray-200 mb-4');
+          const thead = el('thead', 'bg-gray-50');
+          const trHead = el('tr', '');
+          ['Nama', 'Kelas', 'Umur', 'Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+          thead.appendChild(trHead);
+          table.appendChild(thead);
+          const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+          students.forEach((student, idx) => {
+            const tr = el('tr', '');
+            tr.appendChild(el('td', 'px-2 py-2', student.name));
+            tr.appendChild(el('td', 'px-2 py-2', student.class));
+            tr.appendChild(el('td', 'px-2 py-2', student.age));
+            const tdAksi = el('td', 'px-2 py-2');
+            const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+            btnHapus.setAttribute('data-idx', idx);
+            btnHapus.addEventListener('click', function() {
+              students.splice(idx, 1);
+              renderStudentListMain();
+            });
+            tdAksi.appendChild(btnHapus);
+            tr.appendChild(tdAksi);
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          container.appendChild(table);
+          // Form tambah siswa
+          const form = el('form', 'flex flex-wrap gap-2 items-center mb-4');
+          form.innerHTML = `<input type='text' id='student-name-main' placeholder='Nama' required class='border rounded px-2 py-1'> <input type='text' id='student-class-main' placeholder='Kelas' required class='border rounded px-2 py-1'> <input type='number' id='student-age-main' placeholder='Umur' min='5' max='25' required class='border rounded px-2 py-1'> <button type='submit' class='bg-blue-600 text-white px-4 py-1 rounded'>Tambah</button>`;
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = form.querySelector('#student-name-main').value.trim();
+            const kelas = form.querySelector('#student-class-main').value.trim();
+            const age = parseInt(form.querySelector('#student-age-main').value, 10);
+            if (name && kelas && age) {
+              const newId = students.length ? students[students.length - 1].id + 1 : 1;
+              students.push({ id: newId, name: name, class: kelas, age: age });
+              renderStudentListMain();
+              form.reset();
+            }
+          });
+          container.appendChild(form);
+        }
+
+        // Render Jadwal Pelajaran
+        function renderScheduleMain() {
+          const container = document.getElementById('contentJadwal');
+          if (!container) return;
+          container.innerHTML = '';
+          const form = el('form', 'flex flex-wrap gap-2 items-center mb-4');
+          form.innerHTML = `<input type='text' id='input-jam-main' placeholder='Jam' required class='border rounded px-2 py-1'> <select id='input-hari-main' required class='border rounded px-2 py-1'><option value='Monday'>Senin</option><option value='Tuesday'>Selasa</option><option value='Wednesday'>Rabu</option><option value='Thursday'>Kamis</option><option value='Friday'>Jumat</option></select> <input type='text' id='input-mapel-main' placeholder='Mata Pelajaran' required class='border rounded px-2 py-1'> <button type='submit' class='bg-blue-600 text-white px-4 py-1 rounded'>Tambah Jadwal</button>`;
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const jam = form.querySelector('#input-jam-main').value.trim();
+            const hari = form.querySelector('#input-hari-main').value;
+            const mapel = form.querySelector('#input-mapel-main').value.trim();
+            if(jam && hari && mapel) {
+              schedule.push({ time: jam, day: hari, subject: mapel });
+              localStorage.setItem('scheduleApp', JSON.stringify(schedule));
+              renderScheduleMain();
+              form.reset();
+            }
+          });
+          container.appendChild(form);
+          const table = el('table', 'min-w-full divide-y divide-gray-200');
+          const thead = el('thead', 'bg-gray-50');
+          const trHead = el('tr', '');
+          ['Jam','Senin','Selasa','Rabu','Kamis','Jumat','Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+          thead.appendChild(trHead);
+          table.appendChild(thead);
+          const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+          const jamList = [...new Set(schedule.map(s => s.time))].sort();
+          jamList.forEach(jam => {
+            const tr = el('tr', '');
+            tr.appendChild(el('td', 'px-2 py-2', jam));
+            ['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach(hari => {
+              const pelajaran = schedule.find(s => s.time === jam && s.day === hari);
+              tr.appendChild(el('td', 'px-2 py-2', pelajaran ? pelajaran.subject : ''));
+            });
+            const tdAksi = el('td', 'px-2 py-2');
+            const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+            btnHapus.setAttribute('data-jam', jam);
+            btnHapus.addEventListener('click', function() {
+              schedule = schedule.filter(s => s.time !== jam);
+              localStorage.setItem('scheduleApp', JSON.stringify(schedule));
+              renderScheduleMain();
+            });
+            tdAksi.appendChild(btnHapus);
+            tr.appendChild(tdAksi);
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          container.appendChild(table);
+        }
+
+        // Render Monitoring Hafalan
+        function renderMonitoringMain() {
+        // Restore: monitoring hafalan table vertical and simple
+        const container = document.getElementById('contentHafalan');
+        if (!container) return;
+        container.innerHTML = '';
+        const table = el('table', 'min-w-full divide-y divide-gray-200 mb-4');
+        const thead = el('thead', 'bg-gray-50');
+        const trHead = el('tr', '');
+        ['Nama Siswa', 'Hafalan Baru', 'Murojaah', 'Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+        const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+        students.forEach((student, idx) => {
+          const tr = el('tr', '');
+          tr.appendChild(el('td', 'px-2 py-2', student.name));
+          // Hafalan Baru
+          const tdBaru = el('td', 'px-2 py-2');
+          const inputBaru = el('input', 'border rounded px-2 py-1', '');
+          inputBaru.type = 'text';
+          inputBaru.placeholder = 'Hafalan Baru';
+          inputBaru.value = hafalanData[student.id]?.baru || '';
+          inputBaru.addEventListener('change', function() {
+            if (!hafalanData[student.id]) hafalanData[student.id] = {};
+            hafalanData[student.id].baru = inputBaru.value;
+            localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+          });
+          tdBaru.appendChild(inputBaru);
+          tr.appendChild(tdBaru);
+          // Murojaah
+          const tdMurojaah = el('td', 'px-2 py-2');
+          const inputMurojaah = el('input', 'border rounded px-2 py-1', '');
+          inputMurojaah.type = 'text';
+          inputMurojaah.placeholder = 'Murojaah';
+          inputMurojaah.value = hafalanData[student.id]?.murojaah || '';
+          inputMurojaah.addEventListener('change', function() {
+            if (!hafalanData[student.id]) hafalanData[student.id] = {};
+            hafalanData[student.id].murojaah = inputMurojaah.value;
+            localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+          });
+          tdMurojaah.appendChild(inputMurojaah);
+          tr.appendChild(tdMurojaah);
+          // Aksi
+          const tdAksi = el('td', 'px-2 py-2');
+          const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+          btnHapus.addEventListener('click', function() {
+            delete hafalanData[student.id];
+            localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+            renderMonitoringMain();
+          });
+          tdAksi.appendChild(btnHapus);
+          tr.appendChild(tdAksi);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        container.appendChild(table);
+      }
+
+        // Inisialisasi render pada tab aktif
+        document.getElementById('tabAbsensi').addEventListener('click', renderAttendanceMain);
+        document.getElementById('tabSiswa').addEventListener('click', renderStudentListMain);
+        document.getElementById('tabJadwal').addEventListener('click', renderScheduleMain);
+        document.getElementById('tabHafalan').addEventListener('click', renderMonitoringMain);
+    </script>
+</body>
+<script>
+// === Fitur Absensi, Daftar Siswa, Jadwal Pelajaran, Monitoring Hafalan ===
+// Data storage
+let students = [
+  { id: 1, name: "Ahmad Fauzi", class: "8-A", nis: "2023001" },
+  { id: 2, name: "Siti Aminah", class: "8-A", nis: "2023002" },
+  { id: 3, name: "Budi Santoso", class: "8-B", nis: "2023003" }
+];
+let attendance = JSON.parse(localStorage.getItem('attendanceApp') || '{}');
+let schedule = JSON.parse(localStorage.getItem('scheduleApp') || '[]');
+let hafalanData = JSON.parse(localStorage.getItem('hafalanApp') || '{}');
+
+// Utility: create element with classes
+function el(tag, classes = '', html = '') {
+  const e = document.createElement(tag);
+  if (classes) e.className = classes;
+  if (html) e.innerHTML = html;
+  return e;
+}
+
+// Render Absensi
+function renderAttendanceMain() {
+  const container = document.getElementById('contentAbsensi');
+  if (!container) return;
+  container.innerHTML = '';
+  const table = el('table', 'min-w-full divide-y divide-gray-200 mb-4');
+  const thead = el('thead', 'bg-gray-50');
+  const trHead = el('tr', '');
+  ['No', 'Nama Siswa', 'Kelas', 'Status', 'Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+  const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+  students.forEach((student, idx) => {
+    const tr = el('tr', '');
+    tr.appendChild(el('td', 'px-2 py-2', idx+1));
+    tr.appendChild(el('td', 'px-2 py-2', student.name));
+    tr.appendChild(el('td', 'px-2 py-2', student.class));
+    // Status
+    const tdStatus = el('td', 'px-2 py-2');
+    const select = el('select', 'border rounded px-2 py-1');
+    ['Hadir', 'Izin', 'Sakit', 'Absen'].forEach(opt => {
+      const option = el('option', '', opt);
+      option.value = opt;
+      select.appendChild(option);
+    });
+    select.value = attendance[student.id] || 'Hadir';
+    select.addEventListener('change', function() {
+      attendance[student.id] = select.value;
+      localStorage.setItem('attendanceApp', JSON.stringify(attendance));
+    });
+    tdStatus.appendChild(select);
+    tr.appendChild(tdStatus);
+    // Aksi
+    const tdAksi = el('td', 'px-2 py-2');
+    const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+    btnHapus.addEventListener('click', function() {
+      students.splice(idx, 1);
+      renderAttendanceMain();
+    });
+    tdAksi.appendChild(btnHapus);
+    tr.appendChild(tdAksi);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+  // Form tambah siswa
+  const form = el('form', 'flex flex-wrap gap-2 items-center mb-4');
+  form.innerHTML = `<input type='text' id='student-name-main' placeholder='Nama' required class='border rounded px-2 py-1'> <input type='text' id='student-class-main' placeholder='Kelas' required class='border rounded px-2 py-1'> <input type='text' id='student-nis-main' placeholder='NIS' required class='border rounded px-2 py-1'> <button type='submit' class='bg-blue-600 text-white px-4 py-1 rounded'>Tambah</button>`;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = form.querySelector('#student-name-main').value.trim();
+    const kelas = form.querySelector('#student-class-main').value.trim();
+    const nis = form.querySelector('#student-nis-main').value.trim();
+    if (name && kelas && nis) {
+      const newId = students.length ? students[students.length - 1].id + 1 : 1;
+      students.push({ id: newId, name: name, class: kelas, nis: nis });
+      renderAttendanceMain();
+      form.reset();
+    }
+  });
+  container.appendChild(form);
+}
+
+// Render Daftar Siswa
+function renderStudentListMain() {
+  const container = document.getElementById('contentSiswa');
+  if (!container) return;
+  container.innerHTML = '';
+  const table = el('table', 'min-w-full divide-y divide-gray-200 mb-4');
+  const thead = el('thead', 'bg-gray-50');
+  const trHead = el('tr', '');
+  ['No', 'Nama Siswa', 'NIS', 'Kelas', 'Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+  const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+  students.forEach((student, idx) => {
+    const tr = el('tr', '');
+    tr.appendChild(el('td', 'px-2 py-2', idx+1));
+    tr.appendChild(el('td', 'px-2 py-2', student.name));
+    tr.appendChild(el('td', 'px-2 py-2', student.nis));
+    tr.appendChild(el('td', 'px-2 py-2', student.class));
+    const tdAksi = el('td', 'px-2 py-2');
+    const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+    btnHapus.addEventListener('click', function() {
+      students.splice(idx, 1);
+      renderStudentListMain();
+    });
+    tdAksi.appendChild(btnHapus);
+    tr.appendChild(tdAksi);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+// Render Jadwal Pelajaran
+function renderScheduleMain() {
+  const container = document.getElementById('contentJadwal');
+  if (!container) return;
+  container.innerHTML = '';
+  const form = el('form', 'flex flex-wrap gap-2 items-center mb-4');
+  form.innerHTML = `<input type='text' id='input-jam-main' placeholder='Jam' required class='border rounded px-2 py-1'> <input type='text' id='input-mapel-main' placeholder='Mata Pelajaran' required class='border rounded px-2 py-1'> <input type='text' id='input-kelas-main' placeholder='Kelas' required class='border rounded px-2 py-1'> <button type='submit' class='bg-blue-600 text-white px-4 py-1 rounded'>Tambah Jadwal</button>`;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const jam = form.querySelector('#input-jam-main').value.trim();
+    const mapel = form.querySelector('#input-mapel-main').value.trim();
+    const kelas = form.querySelector('#input-kelas-main').value.trim();
+    if(jam && mapel && kelas) {
+      schedule.push({ time: jam, subject: mapel, class: kelas });
+      localStorage.setItem('scheduleApp', JSON.stringify(schedule));
+      renderScheduleMain();
+      form.reset();
+    }
+  });
+  container.appendChild(form);
+  const table = el('table', 'min-w-full divide-y divide-gray-200');
+  const thead = el('thead', 'bg-gray-50');
+  const trHead = el('tr', '');
+  ['Jam','Mata Pelajaran','Kelas','Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+  const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+  schedule.forEach((item, idx) => {
+    const tr = el('tr', '');
+    tr.appendChild(el('td', 'px-2 py-2', item.time));
+    tr.appendChild(el('td', 'px-2 py-2', item.subject));
+    tr.appendChild(el('td', 'px-2 py-2', item.class));
+    const tdAksi = el('td', 'px-2 py-2');
+    const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+    btnHapus.addEventListener('click', function() {
+      schedule.splice(idx, 1);
+      localStorage.setItem('scheduleApp', JSON.stringify(schedule));
+      renderScheduleMain();
+    });
+    tdAksi.appendChild(btnHapus);
+    tr.appendChild(tdAksi);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+// Render Monitoring Hafalan
+function renderMonitoringMain() {
+  const container = document.getElementById('contentHafalan');
+  if (!container) return;
+  container.innerHTML = '';
+  const table = el('table', 'min-w-full divide-y divide-gray-200 mb-4');
+  const thead = el('thead', 'bg-gray-50');
+  const trHead = el('tr', '');
+  ['No', 'Nama Siswa', 'Kelas', 'Juz', 'Progres', 'Aksi'].forEach(txt => trHead.appendChild(el('th', 'px-2 py-2', txt)));
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+  const tbody = el('tbody', 'bg-white divide-y divide-gray-200', '');
+  students.forEach((student, idx) => {
+    const tr = el('tr', '');
+    tr.appendChild(el('td', 'px-2 py-2', idx+1));
+    tr.appendChild(el('td', 'px-2 py-2', student.name));
+    tr.appendChild(el('td', 'px-2 py-2', student.class));
+    // Juz
+    const tdJuz = el('td', 'px-2 py-2');
+    const inputJuz = el('input', 'border rounded px-2 py-1', '');
+    inputJuz.type = 'text';
+    inputJuz.placeholder = 'Juz';
+    inputJuz.value = hafalanData[student.id]?.juz || '';
+    inputJuz.addEventListener('change', function() {
+      if (!hafalanData[student.id]) hafalanData[student.id] = {};
+      hafalanData[student.id].juz = inputJuz.value;
+      localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+    });
+    tdJuz.appendChild(inputJuz);
+    tr.appendChild(tdJuz);
+    // Progres
+    const tdProgres = el('td', 'px-2 py-2');
+    const inputProgres = el('input', 'border rounded px-2 py-1', '');
+    inputProgres.type = 'text';
+    inputProgres.placeholder = 'Progres';
+    inputProgres.value = hafalanData[student.id]?.progres || '';
+    inputProgres.addEventListener('change', function() {
+      if (!hafalanData[student.id]) hafalanData[student.id] = {};
+      hafalanData[student.id].progres = inputProgres.value;
+      localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+    });
+    tdProgres.appendChild(inputProgres);
+    tr.appendChild(tdProgres);
+    // Aksi
+    const tdAksi = el('td', 'px-2 py-2');
+    const btnHapus = el('button', 'bg-red-600 text-white px-2 py-1 rounded', 'Hapus');
+    btnHapus.addEventListener('click', function() {
+      delete hafalanData[student.id];
+      localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+      renderMonitoringMain();
+    });
+    tdAksi.appendChild(btnHapus);
+    tr.appendChild(tdAksi);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+// Inisialisasi render pada tab aktif
+document.getElementById('tabAbsensi').addEventListener('click', renderAttendanceMain);
+document.getElementById('tabSiswa').addEventListener('click', renderStudentListMain);
+document.getElementById('tabJadwal').addEventListener('click', renderScheduleMain);
+document.getElementById('tabHafalan').addEventListener('click', renderMonitoringMain);
+</script>
+</html>

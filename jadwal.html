@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekolah Digital - Aplikasi Pendidikan Terintegrasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .student-card {
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (Web) -->
+    <nav class="nav-gradient text-white hidden md:block">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital - Kotak biru navy dengan ikon buku putih di tengah" class="w-10 h-10 rounded">
+                    <span class="text-xl font-bold">Sekolah Digital</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="tes.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+                    <a href="jadwal.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="absensi.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>Absensi
+                    </a>
+                    <a href="hafalan.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-book-quran mr-2"></i>Hafalan
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer relative" onclick="toggleProfileMenu()">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1973089b-fe1c-40dd-a6d0-117bffc0113b.png" alt="Foto profil pengguna" class="w-10 h-10 rounded-full border border-gray-300">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm leading-tight">Guru Ahmad</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-500 text-lg"></i>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-10">
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil</a>
+                            <a href="daftar_siswa.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Daftar Siswa</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Keluar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 w-full bg-white shadow-lg">
+        <div class="flex justify-around py-3">
+            <a href="#" class="flex flex-col items-center text-blue-900">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs mt-1">Jadwal</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user-check text-xl"></i>
+                <span class="text-xs mt-1">Absensi</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-quran text-xl"></i>
+                <span class="text-xs mt-1">Hafalan</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container mx-auto px-6 py-8">
+        <!-- Jadwal Pelajaran Section -->
+        <section id="jadwal-pelajaran" class="tab-content">
+            <h2 class="text-2xl font-bold mb-4">Jadwal Pelajaran</h2>
+            <form id="add-schedule-form" style="margin-bottom:18px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <input type="text" id="input-jam" placeholder="Jam" required style="padding:8px 12px; border-radius:6px; border:1px solid #ccc; font-size:15px; width:90px;" />
+                <select id="input-hari" required style="padding:8px 12px; border-radius:6px; border:1px solid #ccc; font-size:15px;">
+                    <option value="Monday">Senin</option>
+                    <option value="Tuesday">Selasa</option>
+                    <option value="Wednesday">Rabu</option>
+                    <option value="Thursday">Kamis</option>
+                    <option value="Friday">Jumat</option>
+                </select>
+                <input type="text" id="input-mapel" placeholder="Mata Pelajaran" required style="padding:8px 12px; border-radius:6px; border:1px solid #ccc; font-size:15px; width:140px;" />
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200">Tambah Jadwal</button>
+            </form>
+            <table class="schedule-table min-w-full bg-white rounded-lg shadow-md">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-gray-700">Jam</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Senin</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Selasa</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Rabu</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Kamis</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Jumat</th>
+                        <th class="py-3 px-4 text-left text-gray-700"></th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body" class="divide-y divide-gray-200">
+                    <!-- Schedule rows will be generated here -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        let schedule = JSON.parse(localStorage.getItem('scheduleApp') || '[]');
+
+        function renderSchedule() {
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = '';
+            const jamList = [...new Set(schedule.map(s => s.time))].sort();
+            jamList.forEach(jam => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="py-3 px-4">${jam}</td>`;
+                ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(hari => {
+                    const pelajaran = schedule.find(s => s.time === jam && s.day === hari);
+                    tr.innerHTML += `<td class="py-3 px-4">${pelajaran ? pelajaran.subject : ''}</td>`;
+                });
+                tr.innerHTML += `<td class="py-3 px-4 text-right">
+                                    <button class="btn-hapus-jadwal bg-red-600 text-white rounded-lg px-3 py-1" data-jam="${jam}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>`;
+                tbody.appendChild(tr);
+            });
+            tbody.querySelectorAll('.btn-hapus-jadwal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const jam = this.getAttribute('data-jam');
+                    schedule = schedule.filter(s => s.time !== jam);
+                    localStorage.setItem('scheduleApp', JSON.stringify(schedule));
+                    renderSchedule();
+                });
+            });
+        }
+
+        document.getElementById('add-schedule-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const time = document.getElementById('input-jam').value.trim();
+            const day = document.getElementById('input-hari').value;
+            const subject = document.getElementById('input-mapel').value.trim();
+            if (time && day && subject) {
+                schedule.push({ time, day, subject });
+                localStorage.setItem('scheduleApp', JSON.stringify(schedule));
+                renderSchedule();
+                e.target.reset();
+            }
+        });
+
+        renderSchedule();
+
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profileMenu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aplikasi Sekolah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+            min-height: 100vh;
+            color: #222;
+        }
+        .navbar {
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 4px 16px rgba(31,38,135,0.15);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .logo img {
+            width: 40px;
+            margin-right: 12px;
+        }
+        .navbar .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #4e54c8;
+        }
+        .navbar .user {
+            font-size: 15px;
+            color: #555;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 32px auto;
+            background: rgba(255,255,255,0.97);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px rgba(31,38,135,0.18);
+            padding: 32px 24px;
+            border: 1.5px solid #e3e6f5;
+        }
+        .menu {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .menu button {
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(78,84,200,0.12);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .menu button.active, .menu button:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            box-shadow: 0 4px 16px rgba(78,84,200,0.18);
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+        /* Absensi */
+        .absensi-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 18px;
+            font-size: 15px;
+        }
+        .absensi-table th, .absensi-table td {
+            border: 1px solid #d1d1d1;
+            padding: 12px 8px;
+            text-align: center;
+            vertical-align: middle;
+            background: #fff;
+        }
+        .absensi-table th {
+            background: linear-gradient(90deg, #e3e6f5 0%, #f0f4ff 100%);
+            color: #4e54c8;
+            font-size: 15px;
+            font-weight: 700;
+            border-top: 2px solid #8f94fb;
+        }
+        .absensi-table tr:nth-child(even) td {
+            background: #f7f8fc;
+        }
+        .absensi-table tr:hover td {
+            background: #eaf0ff;
+        }
+        .absensi-table td input[type="checkbox"] {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        .absensi-table td {
+            border-radius: 8px;
+        }
+        /* Daftar Siswa */
+        .student-list {
+            margin-top: 18px;
+            list-style: none;
+            padding: 0;
+        }
+        .student-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .student-list button {
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        /* Jadwal Pelajaran */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #d1d1d1;
+            padding: 10px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .schedule-table th {
+            background: #f0f4ff;
+            color: #4e54c8;
+        }
+        .schedule-table button {
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        /* Monitoring Hafalan */
+        .hafalan-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 18px;
+            font-size: 15px;
+        }
+        .hafalan-table th, .hafalan-table td {
+            border: 1px solid #d1d1d1;
+            padding: 12px 8px;
+            text-align: center;
+            vertical-align: middle;
+            background: #fff;
+        }
+        .hafalan-table th {
+            background: linear-gradient(90deg, #e3e6f5 0%, #f0f4ff 100%);
+            color: #4e54c8;
+            font-size: 15px;
+            font-weight: 700;
+            border-top: 2px solid #8f94fb;
+        }
+        .hafalan-table tr:nth-child(even) td {
+            background: #f7f8fc;
+        }
+        .hafalan-table tr:hover td {
+            background: #eaf0ff;
+        }
+        .hafalan-table td input[type="text"] {
+            width: 90px;
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid #d1d1d1;
+            font-size: 14px;
+            background: #f8faff;
+        }
+        .hafalan-table td {
+            border-radius: 8px;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 8px 2px;
+                border-radius: 10px;
+            }
+            .menu {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .absensi-table th, .absensi-table td,
+            .hafalan-table th, .hafalan-table td,
+            .schedule-table th, .schedule-table td {
+                padding: 7px 2px;
+                font-size: 13px;
+            }
+            .absensi-table td input[type="checkbox"],
+            .hafalan-table td input[type="text"] {
+                transform: scale(1.1);
+                width: 60px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://img.icons8.com/color/96/000000/school-building.png" alt="Logo" />
+            <span class="title">Aplikasi Sekolah</span>
+        </div>
+        <div class="user">Selamat datang, Admin</div>
+    </div>
+    <div class="container">
+        <div class="menu">
+            <button class="active" data-section="absensi">Absensi</button>
+            <button data-section="siswa">Daftar Siswa</button>
+            <button data-section="jadwal">Jadwal Pelajaran</button>
+            <button data-section="hafalan">Monitoring Hafalan</button>
+        </div>
+        <div id="absensi" class="section active">
+            <h3>Absensi Siswa Perbulan</h3>
+            <div style="margin-bottom:16px; text-align:center;">
+                <select id="bulan-absensi" style="padding:8px 16px; border-radius:8px; font-size:16px;">
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                </select>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="absensi-table" id="absensi-bulan">
+                    <thead>
+                        <tr>
+                            <th>Nama Siswa</th>
+                            <!-- Kolom hari akan diisi dengan JavaScript -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Isi dengan JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="siswa" class="section">
+            <h3>Daftar Siswa</h3>
+            <form id="form-tambah-siswa" style="margin-bottom:12px; display:flex; gap:8px; justify-content:center;">
+                <input type="text" id="input-nama-siswa" placeholder="Nama siswa baru" style="padding:8px; border-radius:6px; border:1px solid #ccc; font-size:15px;" required />
+                <button type="submit" style="padding:8px 16px; border-radius:6px; background:#4e54c8; color:#fff; border:none; font-weight:700;">Tambah</button>
+            </form>
+            <ul class="student-list" id="student-list"></ul>
+        </div>
+        <div id="jadwal" class="section">
+            <h3>Jadwal Pelajaran</h3>
+            <form id="form-tambah-jadwal" style="margin-bottom:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                <input type="text" id="input-hari" placeholder="Hari" style="padding:8px; border-radius:6px; border:1px solid #ccc; font-size:15px; width:90px;" required />
+                <input type="text" id="input-mapel" placeholder="Mata Pelajaran" style="padding:8px; border-radius:6px; border:1px solid #ccc; font-size:15px; width:140px;" required />
+                <input type="text" id="input-jam" placeholder="Jam" style="padding:8px; border-radius:6px; border:1px solid #ccc; font-size:15px; width:110px;" required />
+                <button type="submit" style="padding:8px 16px; border-radius:6px; background:#4e54c8; color:#fff; border:none; font-weight:700;">Tambah</button>
+            </form>
+            <table class="schedule-table" id="jadwal-table">
+                <thead>
+                    <tr>
+                        <th>Hari</th>
+                        <th>Mata Pelajaran</th>
+                        <th>Jam</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="hafalan" class="section">
+            <h3>Monitoring Hafalan Siswa Perbulan</h3>
+            <div style="margin-bottom:16px; text-align:center;">
+                <select id="bulan-hafalan" style="padding:8px 16px; border-radius:8px; font-size:16px;">
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                </select>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="hafalan-table" id="hafalan-bulan">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Nama Siswa</th>
+                            <th colspan="30">Hari ke-1 s/d 30</th>
+                        </tr>
+                        <tr id="hafalan-days-header">
+                            <!-- Hari 1-30 akan diisi dengan JavaScript -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Isi dengan JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="footer">&copy; 2025 Aplikasi Sekolah. All rights reserved.</div>
+    </div>
+    <script>
+        // Navigasi menu
+        const menuButtons = document.querySelectorAll('.menu button');
+        const sections = document.querySelectorAll('.section');
+        menuButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                menuButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                sections.forEach(sec => sec.classList.remove('active'));
+                document.getElementById(btn.dataset.section).classList.add('active');
+            });
+        });
+
+        // Data siswa
+        function getSiswa() {
+            return JSON.parse(localStorage.getItem('siswa') || '["Adit","Bella","Citra"]');
+        }
+        function setSiswa(arr) {
+            localStorage.setItem('siswa', JSON.stringify(arr));
+        }
+
+        // Render daftar siswa
+        function renderSiswa() {
+            const siswa = getSiswa();
+            const ul = document.getElementById('student-list');
+            ul.innerHTML = '';
+            siswa.forEach((nama, idx) => {
+                const li = document.createElement('li');
+                li.textContent = nama;
+                const btnHapus = document.createElement('button');
+                btnHapus.textContent = 'Hapus';
+                btnHapus.addEventListener('click', () => {
+                    const siswaBaru = getSiswa().filter((n, i) => i !== idx);
+                    setSiswa(siswaBaru);
+                    renderSiswa();
+                    renderAbsensiTable(parseInt(document.getElementById('bulan-absensi').value));
+                    renderHafalanBulan(parseInt(document.getElementById('bulan-hafalan').value));
+                });
+                li.appendChild(btnHapus);
+                ul.appendChild(li);
+            });
+        }
+        renderSiswa();
+
+        document.getElementById('form-tambah-siswa').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('input-nama-siswa');
+            const nama = input.value.trim();
+            if (nama) {
+                const siswa = getSiswa();
+                siswa.push(nama);
+                setSiswa(siswa);
+                renderSiswa();
+                input.value = '';
+                renderAbsensiTable(parseInt(document.getElementById('bulan-absensi').value));
+                renderHafalanBulan(parseInt(document.getElementById('bulan-hafalan').value));
+            }
+        });
+
+        // Jadwal pelajaran
+        function getJadwal() {
+            return JSON.parse(localStorage.getItem('jadwal') || '[]');
+        }
+        function setJadwal(arr) {
+            localStorage.setItem('jadwal', JSON.stringify(arr));
+        }
+        function renderJadwal() {
+            const jadwal = getJadwal();
+            const tbody = document.querySelector('#jadwal-table tbody');
+            tbody.innerHTML = '';
+            jadwal.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.hari}</td>
+                    <td>${row.mapel}</td>
+                    <td>${row.jam}</td>
+                    <td><button data-idx="${idx}">Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        renderJadwal();
+
+        document.getElementById('form-tambah-jadwal').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const hari = document.getElementById('input-hari').value.trim();
+            const mapel = document.getElementById('input-mapel').value.trim();
+            const jam = document.getElementById('input-jam').value.trim();
+            if (hari && mapel && jam) {
+                const jadwal = getJadwal();
+                jadwal.push({ hari, mapel, jam });
+                setJadwal(jadwal);
+                renderJadwal();
+                document.getElementById('input-hari').value = '';
+                document.getElementById('input-mapel').value = '';
+                document.getElementById('input-jam').value = '';
+            }
+        });
+
+        document.querySelector('#jadwal-table tbody').addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON') {
+                const idx = parseInt(e.target.getAttribute('data-idx'));
+                const jadwal = getJadwal();
+                jadwal.splice(idx, 1);
+                setJadwal(jadwal);
+                renderJadwal();
+            }
+        });
+
+        // Monitoring Hafalan
+        const hariPerBulan = {
+            1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
+        };
+
+        function getHafalanBulan() {
+            return JSON.parse(localStorage.getItem('hafalanBulan') || '{}');
+        }
+        function setHafalanBulan(obj) {
+            localStorage.setItem('hafalanBulan', JSON.stringify(obj));
+        }
+
+        function renderHafalanBulan(bulan) {
+            const siswa = getSiswa();
+            const hari = hariPerBulan[bulan];
+            const theadRow = document.getElementById('hafalan-days-header');
+            theadRow.innerHTML = '';
+            for (let i = 1; i <= hari; i++) {
+                const th = document.createElement('th');
+                th.style.minWidth = '110px';
+                th.title = 'Hari ' + i;
+                th.innerHTML = `<span style="font-size:13px;">${i}</span><br><span style="font-size:12px; color:#888;">Hafalan Baru / Murojaah</span>`;
+                theadRow.appendChild(th);
+            }
+            const tbody = document.querySelector('#hafalan-bulan tbody');
+            tbody.innerHTML = '';
+            const hafalanData = getHafalanBulan();
+            siswa.forEach(nama => {
+                const tr = document.createElement('tr');
+                const tdNama = document.createElement('td');
+                tdNama.textContent = nama;
+                tr.appendChild(tdNama);
+                for (let h = 1; h <= hari; h++) {
+                    const td = document.createElement('td');
+                    td.style.display = 'flex';
+                    td.style.flexDirection = 'column';
+                    td.style.alignItems = 'center';
+                    // Hafalan Baru
+                    const baruWrap = document.createElement('div');
+                    baruWrap.style = 'display:flex;align-items:center;gap:4px;';
+                    const lblBaru = document.createElement('span');
+                    lblBaru.textContent = 'Baru:';
+                    lblBaru.style = 'font-size:12px;color:#4e54c8;font-weight:700;';
+                    const inputBaru = document.createElement('input');
+                    inputBaru.type = 'text';
+                    inputBaru.placeholder = 'Hafalan Baru';
+                    inputBaru.style = 'font-size:13px;';
+                    inputBaru.value = hafalanData[`${nama}-h${h}-b${bulan}-baru`] || '';
+                    inputBaru.addEventListener('change', function () {
+                        hafalanData[`${nama}-h${h}-b${bulan}-baru`] = inputBaru.value;
+                        setHafalanBulan(hafalanData);
+                    });
+                    baruWrap.appendChild(lblBaru);
+                    baruWrap.appendChild(inputBaru);
+                    // Murojaah
+                    const murojaahWrap = document.createElement('div');
+                    murojaahWrap.style = 'display:flex;align-items:center;gap:4px;';
+                    const lblMurojaah = document.createElement('span');
+                    lblMurojaah.textContent = 'Murojaah:';
+                    lblMurojaah.style = 'font-size:12px;color:#d32f2f;font-weight:700;';
+                    const inputMurojaah = document.createElement('input');
+                    inputMurojaah.type = 'text';
+                    inputMurojaah.placeholder = 'Murojaah';
+                    inputMurojaah.style = 'font-size:13px;';
+                    inputMurojaah.value = hafalanData[`${nama}-h${h}-b${bulan}-murojaah`] || '';
+                    inputMurojaah.addEventListener('change', function () {
+                        hafalanData[`${nama}-h${h}-b${bulan}-murojaah`] = inputMurojaah.value;
+                        setHafalanBulan(hafalanData);
+                    });
+                    murojaahWrap.appendChild(lblMurojaah);
+                    murojaahWrap.appendChild(inputMurojaah);
+                    td.appendChild(baruWrap);
+                    td.appendChild(murojaahWrap);
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+        }
+        renderHafalanBulan(1);
+        document.getElementById('bulan-hafalan').addEventListener('change', function () {
+            renderHafalanBulan(parseInt(this.value));
+        });
+
+        // Absensi perbulan dengan pilihan bulan dan status Hadir/Izin/Alfa
+        const statusList = ['hadir', 'izin', 'alfa'];
+        const bulanSelect = document.getElementById('bulan-absensi');
+        const absensiTable = document.getElementById('absensi-bulan');
+
+        function getAbsensi() {
+            return JSON.parse(localStorage.getItem('absensi') || '{}');
+        }
+        function setAbsensi(obj) {
+            localStorage.setItem('absensi', JSON.stringify(obj));
+        }
+
+        function renderAbsensiTable(bulan) {
+            const siswa = getSiswa();
+            const hari = hariPerBulan[bulan];
+            const thead = absensiTable.tHead;
+            thead.innerHTML = '';
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<th>Nama Siswa</th>';
+            for (let i = 1; i <= hari; i++) {
+                const th = document.createElement('th');
+                th.textContent = i;
+                th.title = 'Hari ke-' + i;
+                th.style.minWidth = '60px';
+                tr.appendChild(th);
+            }
+            thead.appendChild(tr);
+            // Body
+            const tbody = absensiTable.tBodies[0];
+            tbody.innerHTML = '';
+            const absensiData = getAbsensi();
+            if (siswa.length === 0) {
+                const trKosong = document.createElement('tr');
+                const tdKosong = document.createElement('td');
+                tdKosong.colSpan = hari + 1;
+                tdKosong.textContent = 'Belum ada data siswa.';
+                tdKosong.style = 'text-align:center; color:#d32f2f; font-size:15px;';
+                trKosong.appendChild(tdKosong);
+                tbody.appendChild(trKosong);
+                return;
+            }
+            siswa.forEach(nama => {
+                const tr = document.createElement('tr');
+                const tdNama = document.createElement('td');
+                tdNama.textContent = nama;
+                tr.appendChild(tdNama);
+                for (let h = 1; h <= hari; h++) {
+                    const td = document.createElement('td');
+                    td.style.minWidth = '80px';
+                    td.style.display = 'flex';
+                    td.style.flexDirection = 'column';
+                    td.style.alignItems = 'center';
+                    // Hadir
+                    const hadirWrap = document.createElement('div');
+                    hadirWrap.style = 'display:flex;align-items:center;gap:2px;';
+                    const cbHadir = document.createElement('input');
+                    cbHadir.type = 'checkbox';
+                    cbHadir.title = 'Hadir';
+                    cbHadir.style = 'accent-color:#4e54c8;';
+                    cbHadir.checked = absensiData[`${nama}-h${h}-b${bulan}`] === 'hadir';
+                    const lblHadir = document.createElement('span');
+                    lblHadir.textContent = 'Hadir';
+                    lblHadir.style = 'color:#4e54c8;font-size:12px;font-weight:700;';
+                    hadirWrap.appendChild(cbHadir);
+                    hadirWrap.appendChild(lblHadir);
+                    // Izin
+                    const izinWrap = document.createElement('div');
+                    izinWrap.style = 'display:flex;align-items:center;gap:2px;';
+                    const cbIzin = document.createElement('input');
+                    cbIzin.type = 'checkbox';
+                    cbIzin.title = 'Izin';
+                    cbIzin.style = 'accent-color:#fbc02d;';
+                    cbIzin.checked = absensiData[`${nama}-h${h}-b${bulan}`] === 'izin';
+                    const lblIzin = document.createElement('span');
+                    lblIzin.textContent = 'Izin';
+                    lblIzin.style = 'color:#fbc02d;font-size:12px;font-weight:700;';
+                    izinWrap.appendChild(cbIzin);
+                    izinWrap.appendChild(lblIzin);
+                    // Alfa
+                    const alfaWrap = document.createElement('div');
+                    alfaWrap.style = 'display:flex;align-items:center;gap:2px;';
+                    const cbAlfa = document.createElement('input');
+                    cbAlfa.type = 'checkbox';
+                    cbAlfa.title = 'Alfa';
+                    cbAlfa.style = 'accent-color:#d32f2f;';
+                    cbAlfa.checked = absensiData[`${nama}-h${h}-b${bulan}`] === 'alfa';
+                    const lblAlfa = document.createElement('span');
+                    lblAlfa.textContent = 'Alfa';
+                    lblAlfa.style = 'color:#d32f2f;font-size:12px;font-weight:700;';
+                    alfaWrap.appendChild(cbAlfa);
+                    alfaWrap.appendChild(lblAlfa);
+                    // Event
+                    cbHadir.addEventListener('change', function () {
+                        if (cbHadir.checked) {
+                            absensiData[`${nama}-h${h}-b${bulan}`] = 'hadir';
+                            cbIzin.checked = false;
+                            cbAlfa.checked = false;
+                        } else {
+                            if (!cbIzin.checked && !cbAlfa.checked) absensiData[`${nama}-h${h}-b${bulan}`] = '';
+                        }
+                        setAbsensi(absensiData);
+                    });
+                    cbIzin.addEventListener('change', function () {
+                        if (cbIzin.checked) {
+                            absensiData[`${nama}-h${h}-b${bulan}`] = 'izin';
+                            cbHadir.checked = false;
+                            cbAlfa.checked = false;
+                        } else {
+                            if (!cbHadir.checked && !cbAlfa.checked) absensiData[`${nama}-h${h}-b${bulan}`] = '';
+                        }
+                        setAbsensi(absensiData);
+                    });
+                    cbAlfa.addEventListener('change', function () {
+                        if (cbAlfa.checked) {
+                            absensiData[`${nama}-h${h}-b${bulan}`] = 'alfa';
+                            cbHadir.checked = false;
+                            cbIzin.checked = false;
+                        } else {
+                            if (!cbHadir.checked && !cbIzin.checked) absensiData[`${nama}-h${h}-b${bulan}`] = '';
+                        }
+                        setAbsensi(absensiData);
+                    });
+                    td.appendChild(hadirWrap);
+                    td.appendChild(izinWrap);
+                    td.appendChild(alfaWrap);
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Inisialisasi absensi bulan Januari
+        renderAbsensiTable(1);
+        bulanSelect.addEventListener('change', function () {
+            renderAbsensiTable(parseInt(this.value));
+        });
+    </script>
+</body>
+</html>

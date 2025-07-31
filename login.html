@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Aplikasi Sekolah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border-radius: 20px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            background: url('https://img.icons8.com/color/96/000000/school-building.png') no-repeat center center;
+            background-size: contain;
+        }
+        h2 {
+            margin: 0 0 24px 0;
+            font-weight: 700;
+            color: #4e54c8;
+            letter-spacing: 1px;
+        }
+        .input-group {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 15px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d1d1;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f7f7f7;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #4e54c8;
+            outline: none;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(78,84,200,0.15);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .login-btn:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            box-shadow: 0 6px 18px rgba(78,84,200,0.25);
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+        }
+        @media (max-width: 500px) {
+            .login-container {
+                padding: 24px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo"></div>
+        <h2>Login Sekolah</h2>
+        <form autocomplete="off">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Masukkan username" required autofocus>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+            </div>
+            <button type="submit" class="login-btn">Masuk</button>
+        </form>
+        <div id="login-error" style="color:#d32f2f; margin-top:10px; display:none; font-size:14px; text-align:center;"></div>
+        <div class="footer">&copy; 2025 Aplikasi Sekolah. All rights reserved.</div>
+    </div>
+    <script>
+        // Username dan password yang valid
+        const validUsername = "admin";
+        const validPassword = "sekolah123";
+        const form = document.querySelector('form');
+        const errorDiv = document.getElementById('login-error');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            if (username === validUsername && password === validPassword) {
+                errorDiv.style.display = 'none';
+                window.location.href = 'index.html';
+            } else {
+                errorDiv.textContent = 'Username atau password salah!';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

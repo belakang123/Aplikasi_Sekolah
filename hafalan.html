@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sekolah Digital - Aplikasi Pendidikan Terintegrasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .student-card {
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        /* Added styles to improve table layout and prevent overlap */
+        .monitoring-list {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            max-width: 100%;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+            min-width: 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 6px;
+            vertical-align: top;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            height: auto;
+            vertical-align: middle;
+            padding: 8px 5px;
+        }
+        th:first-child, td:first-child {
+            min-width: 200px;
+            width: 200px;
+            max-width: 200px;
+            font-weight: 600;
+            background-color: #fafafa;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
+        }
+        th:not(:first-child), td:not(:first-child) {
+            width: 400px;
+            min-width: 400px;
+            max-width: 400px;
+            white-space: nowrap;
+        }
+        td > div.input-container {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+        td > div.input-container > input {
+            width: 80%;
+            box-sizing: border-box;
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (Web) -->
+    <nav class="nav-gradient text-white hidden md:block">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital - Kotak biru navy dengan ikon buku putih di tengah" class="w-10 h-10 rounded" />
+                    <span class="text-xl font-bold">Sekolah Digital</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="tes.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+                    <a href="jadwal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="absensi.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>Absensi
+                    </a>
+                    <a href="hafalan.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center">
+                        <i class="fas fa-book-quran mr-2"></i>Hafalan
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4 relative">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer relative" id="profileMenuToggle">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1973089b-fe1c-40dd-a6d0-117bffc0113b.png" alt="Foto profil pengguna" class="w-10 h-10 rounded-full border border-gray-300" />
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm leading-tight">Guru Ahmad</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-500 text-lg"></i>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-10">
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil</a>
+                            <a href="daftar_siswa.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Daftar Siswa</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Keluar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 w-full bg-white shadow-lg">
+        <div class="flex justify-around py-3">
+            <a href="#" class="flex flex-col items-center text-blue-900">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs mt-1">Jadwal</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user-check text-xl"></i>
+                <span class="text-xs mt-1">Absensi</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-quran text-xl"></i>
+                <span class="text-xs mt-1">Hafalan</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-4">
+        <h2 class="text-2xl font-bold mb-4">Monitoring Hafalan Siswa</h2>
+        <div style="overflow-x:auto;" class="monitoring-list" aria-live="polite" aria-relevant="additions removals" id="monitoring-list">
+            <!-- Monitoring list will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // Toggle profile menu visibility
+        const profileMenuToggle = document.getElementById('profileMenuToggle');
+        const profileMenu = document.getElementById('profileMenu');
+
+        profileMenuToggle.addEventListener('click', () => {
+            if (profileMenu.classList.contains('hidden')) {
+                profileMenu.classList.remove('hidden');
+            } else {
+                profileMenu.classList.add('hidden');
+            }
+        });
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!profileMenu.contains(event.target) && !profileMenuToggle.contains(event.target)) {
+                profileMenu.classList.add('hidden');
+            }
+        });
+
+        const students = [
+            { id: 1, name: "Ahmad Fauzi" },
+            { id: 2, name: "Siti Nurhaliza" },
+            { id: 3, name: "Budi Santoso" },
+            { id: 4, name: "Dewi Lestari" }
+        ];
+        const months = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        const daysInMonth = {
+            1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
+        };
+        let hafalanData = JSON.parse(localStorage.getItem('hafalanApp') || '{}');
+
+        function renderMonitoring() {
+            const container = document.getElementById('monitoring-list');
+            container.innerHTML = '';
+            const bulanDiv = document.createElement('div');
+            bulanDiv.style = 'margin-bottom:16px;';
+            const bulanLabel = document.createElement('label');
+            bulanLabel.textContent = 'Pilih Bulan: ';
+            bulanLabel.style = 'font-weight:600; margin-right:8px;';
+            const bulanSelect = document.createElement('select');
+            bulanSelect.id = 'bulan-hafalan-app';
+            bulanSelect.style = 'padding:6px 14px; border-radius:8px; font-size:15px;';
+            months.forEach((bulan, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx + 1;
+                opt.textContent = bulan;
+                bulanSelect.appendChild(opt);
+            });
+            bulanDiv.appendChild(bulanLabel);
+            bulanDiv.appendChild(bulanSelect);
+            container.appendChild(bulanDiv);
+
+            // Set the select value to current month
+            const currentMonth = new Date().getMonth() + 1;
+            bulanSelect.value = currentMonth;
+
+            bulanSelect.addEventListener('change', function () {
+                renderHafalanBulan(parseInt(this.value));
+            });
+            renderHafalanBulan(currentMonth);
+        }
+
+        function renderHafalanBulan(bulanAktif) {
+            const container = document.getElementById('monitoring-list');
+            while (container.children.length > 1) container.removeChild(container.lastChild);
+            if (!hafalanData[bulanAktif]) hafalanData[bulanAktif] = {};
+            const table = document.createElement('table');
+            const scrollWrapper = document.createElement('div');
+            scrollWrapper.className = 'overflow-x-auto';
+            table.className = 'min-w-full bg-white rounded-lg shadow';
+            table.style.tableLayout = 'fixed';
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            trHead.className = 'bg-gray-100 text-gray-700';
+            trHead.innerHTML = `<th class='py-3 px-4 text-left'>Nama Siswa</th>`;
+            for (let day = 1; day <= daysInMonth[bulanAktif]; day++) {
+                const th = document.createElement('th');
+                th.textContent = day;
+                th.style.width = '400px';
+                th.className = 'py-3 px-4';
+                trHead.appendChild(th);
+            }
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+            const tbody = document.createElement('tbody');
+            students.forEach(student => {
+                if (!hafalanData[bulanAktif][student.id]) hafalanData[bulanAktif][student.id] = {};
+                // Create first row for "Baru" inputs
+                const trBaru = document.createElement('tr');
+                // Create second row for "Murojaah" inputs
+                const trMurojaah = document.createElement('tr');
+                // Create the student name cell with rowspan=2
+                const tdNama = document.createElement('td');
+                tdNama.textContent = student.name;
+                tdNama.className = 'py-3 px-4 border-b';
+                tdNama.rowSpan = 2;
+                trBaru.appendChild(tdNama);
+                for (let day = 1; day <= daysInMonth[bulanAktif]; day++) {
+                    if (!hafalanData[bulanAktif][student.id][day]) hafalanData[bulanAktif][student.id][day] = { baru: '', murojaah: '' };
+                    // Create td for "Baru" input
+                    const tdBaru = document.createElement('td');
+                    tdBaru.style.textAlign = 'center';
+                    tdBaru.className = 'py-3 px-4 border-b';
+                    const inputBaru = document.createElement('input');
+                    inputBaru.type = 'text';
+                    inputBaru.placeholder = 'Baru';
+                    inputBaru.value = hafalanData[bulanAktif][student.id][day].baru;
+                    inputBaru.name = `baru-${student.id}-${day}`;
+                    inputBaru.style.width = '90%';
+                    inputBaru.addEventListener('input', function () {
+                        hafalanData[bulanAktif][student.id][day].baru = inputBaru.value;
+                        localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+                        synchronizeHafalanSummary();
+                    });
+                    tdBaru.appendChild(inputBaru);
+                    trBaru.appendChild(tdBaru);
+                    // Create td for "Murojaah" input
+                    const tdMurojaah = document.createElement('td');
+                    tdMurojaah.style.textAlign = 'center';
+                    tdMurojaah.className = 'py-3 px-4 border-b';
+                    const inputMurojaah = document.createElement('input');
+                    inputMurojaah.type = 'text';
+                    inputMurojaah.placeholder = 'Murojaah';
+                    inputMurojaah.value = hafalanData[bulanAktif][student.id][day].murojaah;
+                    inputMurojaah.name = `murojaah-${student.id}-${day}`;
+                    inputMurojaah.style.width = '90%';
+                    inputMurojaah.addEventListener('input', function () {
+                        hafalanData[bulanAktif][student.id][day].murojaah = inputMurojaah.value;
+                        localStorage.setItem('hafalanApp', JSON.stringify(hafalanData));
+                        synchronizeHafalanSummary();
+                    });
+                    tdMurojaah.appendChild(inputMurojaah);
+                    trMurojaah.appendChild(tdMurojaah);
+                }
+                tbody.appendChild(trBaru);
+                tbody.appendChild(trMurojaah);
+            });
+            table.appendChild(tbody);
+            scrollWrapper.appendChild(table);
+            container.appendChild(scrollWrapper);
+        }
+
+        function synchronizeHafalanSummary() {
+            const summary = [];
+            for (const bulan in hafalanData) {
+                for (const studentId in hafalanData[bulan]) {
+                    let totalBaru = 0;
+                    let totalMurojaah = 0;
+                    const days = hafalanData[bulan][studentId];
+                    for (const day in days) {
+                        if (days[day].baru && days[day].baru.trim() !== '') totalBaru++;
+                        if (days[day].murojaah && days[day].murojaah.trim() !== '') totalMurojaah++;
+                    }
+                    summary.push({
+                        id: parseInt(studentId),
+                        totalBaru,
+                        totalMurojaah
+                    });
+                }
+            }
+            localStorage.setItem('hafalanSummary', JSON.stringify(summary));
+        }
+
+        // Call synchronizeHafalanSummary on page load to initialize summary
+        synchronizeHafalanSummary();
+
+        renderMonitoring();
+    </script>
+</body>
+</html>
