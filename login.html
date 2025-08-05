@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Aplikasi Sekolah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 8px 0 rgba(78, 84, 200, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 20px 6px rgba(78, 84, 200, 0.9);
+            }
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .login-container {
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border-radius: 20px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInUp 1s ease forwards;
+            position: relative;
+            z-index: 10;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            background: url('https://img.icons8.com/color/96/000000/school-building.png') no-repeat center center;
+            background-size: contain;
+            animation: pulseGlow 2.5s infinite;
+        }
+        h2 {
+            margin: 0 0 24px 0;
+            font-weight: 700;
+            color: #4e54c8;
+            letter-spacing: 1px;
+            animation: fadeInUp 1.2s ease forwards;
+        }
+        .input-group {
+            width: 100%;
+            margin-bottom: 18px;
+            animation: fadeInUp 1.4s ease forwards;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 15px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d1d1;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f7f7f7;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #4e54c8;
+            outline: none;
+            box-shadow: 0 0 8px rgba(78, 84, 200, 0.5);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(78,84,200,0.15);
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+            animation: fadeInUp 1.6s ease forwards;
+        }
+        .login-btn:hover {
+            background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+            box-shadow: 0 6px 18px rgba(78,84,200,0.35);
+            transform: scale(1.05);
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            animation: fadeInUp 1.8s ease forwards;
+        }
+        /* Animated background bubbles */
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: rise 10s linear infinite;
+        }
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bubbles">
+        <div class="bubble" style="width: 40px; height: 40px; left: 10%; animation-delay: 0s;"></div>
+        <div class="bubble" style="width: 60px; height: 60px; left: 25%; animation-delay: 2s;"></div>
+        <div class="bubble" style="width: 30px; height: 30px; left: 40%; animation-delay: 4s;"></div>
+        <div class="bubble" style="width: 50px; height: 50px; left: 60%; animation-delay: 1s;"></div>
+        <div class="bubble" style="width: 45px; height: 45px; left: 75%; animation-delay: 3s;"></div>
+    </div>
+    <div class="login-container">
+        <div class="logo"></div>
+        <h2>Login Sekolah</h2>
+        <form autocomplete="off">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Masukkan username" required autofocus />
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required />
+            </div>
+            <button type="submit" class="login-btn">Masuk</button>
+        </form>
+        <div id="login-error" style="color:#d32f2f; margin-top:10px; display:none; font-size:14px; text-align:center;"></div>
+        <div class="footer">&copy; 2025 Aplikasi Sekolah. All rights reserved.</div>
+    </div>
+    <script>
+        // Username dan password yang valid
+        const validUsername = "admin";
+        const validPassword = "sekolah123";
+        const form = document.querySelector('form');
+        const errorDiv = document.getElementById('login-error');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            if (username === validUsername && password === validPassword) {
+                errorDiv.style.display = 'none';
+                window.location.href = 'beranda.html';
+            } else {
+                errorDiv.textContent = 'Username atau password salah!';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
