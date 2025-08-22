@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Aplikasi Sekolah Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --error-color: #ef4444;
+            --success-color: #10b981;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .login-header .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .login-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .login-form {
+            padding: 40px 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-group input.error {
+            border-color: var(--error-color);
+            background: #fef2f2;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .login-btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .security-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .lockout-info {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.875rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .login-container {
+                border-radius: 15px;
+            }
+
+            .login-header {
+                padding: 30px 20px;
+            }
+
+            .login-form {
+                padding: 30px 20px;
+            }
+
+            .login-header h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-header {
+                padding: 25px 15px;
+            }
+
+            .login-form {
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2>Aplikasi Sekolah Digital</h2>
+            <p>Masuk sebagai ortu siswa</p>
+        </div>
+        
+        <div class="login-form">
+            <form autocomplete="off" id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Masukkan username" required autofocus autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan password" required autocomplete="off">
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">Masuk</button>
+                
+                <div id="login-error" class="error-message"></div>
+                <div id="lockout-info" class="lockout-info"></div>
+            </form>
+            
+            <div class="security-info">
+                <i class="fas fa-shield-alt"></i>
+                <span>Sistem dilindungi dengan keamanan tingkat lanjut</span>
+            </div>
+        </div>
+        
+        <nav class="security-info">
+            <a href="../portal.html">kembali ke halaman Portal</a>
+        </nav>
+        
+        <div class="footer">
+            &copy; 2025 by EXAsmart. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../js/security.js"></script>
+    <script src="../js/auth2.js"></script>
+    <script>
+        // Enhanced login functionality
+        const form = document.getElementById('loginForm');
+        const errorDiv = document.getElementById('login-error');
+        const lockoutInfo = document.getElementById('lockout-info');
+        const loginBtn = document.getElementById('loginBtn');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        // Check for existing lockout
+        window.addEventListener('load', function() {
+            const username = usernameInput.value.trim();
+            if (username) {
+                checkLockoutStatus(username);
+            }
+        });
+
+        usernameInput.addEventListener('input', function() {
+            checkLockoutStatus(this.value.trim());
+        });
+
+        function checkLockoutStatus(username) {
+            if (!username) return;
+            
+            const attempts = JSON.parse(localStorage.getItem('loginAttempts') || '{}');
+            const userAttempts = attempts[username];
+            
+            if (userAttempts && userAttempts.lockedUntil > Date.now()) {
+                const remainingTime = Math.ceil((userAttempts.lockedUntil - Date.now()) / 1000);
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                
+                lockoutInfo.style.display = 'block';
+                lockoutInfo.innerHTML = `
+                    <strong>⚠️ Akun terkunci!</strong><br>
+                    Terlalu banyak percobaan gagal. Silakan tunggu ${minutes} menit ${seconds} detik lagi.
+                `;
+                
+                loginBtn.disabled = true;
+                usernameInput.disabled = true;
+                passwordInput.disabled = true;
+                
+                const countdownInterval = setInterval(() => {
+                    const newRemainingTime = Math.ceil((userAttempts.lockedUntil - Date.now()) / 1000);
+                    if (newRemainingTime <= 0) {
+                        clearInterval(countdownInterval);
+                        lockoutInfo.style.display = 'none';
+                        loginBtn.disabled = false;
+                        usernameInput.disabled = false;
+                        passwordInput.disabled = false;
+                    } else {
+                        const newMinutes = Math.floor(newRemainingTime / 60);
+                        const newSeconds = newRemainingTime % 60;
+                        lockoutInfo.innerHTML = `
+                            <strong>⚠️ Akun terkunci!</strong><br>
+                            Terlalu banyak percobaan gagal. Silakan tunggu ${newMinutes} menit ${newSeconds} detik lagi.
+                        `;
+                    }
+                }, 1000);
+            }
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Memproses...';
+            errorDiv.style.display = 'none';
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Username dan password harus diisi!';
+                errorDiv.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk';
+                return;
+            }
+            
+            try {
+                const success = await login(username, password);
+                
+                if (success) {
+                    usernameInput.value = '';
+                    passwordInput.value = '';
+                    window.location.href = 'orangtua.html';
+                } else {
+                    const attempts = JSON.parse(localStorage.getItem('loginAttempts') || '{}');
+                    const userAttempts = attempts[username] || { count: 0 };
+                    
+                    if (userAttempts.lockedUntil && userAttempts.lockedUntil > Date.now()) {
+                        const remainingTime = Math.ceil((userAttempts.lockedUntil - Date.now()) / 1000);
+                        const minutes = Math.floor(remainingTime / 60);
+                        const seconds = remainingTime % 60;
+                        errorDiv.textContent = `Terlalu banyak percobaan. Coba lagi dalam ${minutes} menit ${seconds} detik.`;
+                    } else {
+                        errorDiv.textContent = `Username atau password salah! (Percobaan ke-${userAttempts.count})`;
+                    }
+                    errorDiv.style.display = 'block';
+                    passwordInput.value = '';
+                    checkLockoutStatus(username);
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message || 'Terjadi kesalahan saat login';
+                errorDiv.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Masuk';
+            }
+        });
+
+        // Clear sensitive data
+        window.addEventListener('beforeunload', function() {
+            usernameInput.value = '';
+            passwordInput.value = '';
+        });
+
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                usernameInput.value = '';
+                passwordInput.value = '';
+            }
+        });
+
+        usernameInput.addEventListener('focus', function() {
+            this.classList.remove('error');
+        });
+        
+        passwordInput.addEventListener('focus', function() {
+            this.classList.remove('error');
+        });
+    </script>
+</body>
+</html>

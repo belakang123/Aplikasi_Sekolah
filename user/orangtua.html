@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekolah Digital - Portal Orang Tua</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .student-card {
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (Web) -->
+    <nav class="nav-gradient text-white hidden md:block">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital" class="w-10 h-10 rounded">
+                    <span class="text-xl font-bold">Sekolah Digital</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="orangtua.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+                    <a href="jadwal-siswa.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal Anak
+                    </a>
+                    <a href="absensi-siswa.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>Absensi Anak
+                    </a>
+                    <a href="hafalan-siswa.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-book-quran mr-2"></i>Hafalan Anak
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer relative" id="profileToggle">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1973089b-fe1c-40dd-a6d0-117bffc0113b.png" alt="Foto profil pengguna" class="w-10 h-10 rounded-full border border-gray-300">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm leading-tight">Orang Tua Budi</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-500 text-lg"></i>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-50">
+                            <a href="profil_orangtua.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil Saya</a>
+                            <a href="login-ortu.html" class="logout-btn block px-4 py-2 text-gray-700 hover:bg-gray-100">Keluar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 w-full bg-white shadow-lg z-20">
+        <div class="flex justify-around py-3">
+            <a href="orangtua.html" class="flex flex-col items-center text-blue-900">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="jadwal-siswa.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs mt-1">Jadwal</span>
+            </a>
+            <a href="absensi-siswa.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user-check text-xl"></i>
+                <span class="text-xs mt-1">Absensi</span>
+            </a>
+            <a href="hafalan-siswa.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-quran text-xl"></i>
+                <span class="text-xs mt-1">Hafalan</span>
+            </a>
+            <a href="portal-mbl-ortu.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 pb-20 md:pb-6">
+        <!-- Welcome Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div>
+                    <h1 id="greeting" class="text-2xl font-bold text-blue-900 mb-2">Selamat Pagi, Orang Tua Budi</h1>
+                    <p class="text-gray-600" id="currentDate">Selasa, 20 Juni 2023</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <select id="studentSelector" class="block w-full md:w-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats for Selected Student -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500">Rata-rata Nilai</p>
+                        <p id="averageGrade" class="text-3xl font-bold text-blue-900">N/A</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-star text-blue-900 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500">Kehadiran Bulan Ini</p>
+                        <p id="monthlyAttendance" class="text-3xl font-bold text-green-600">0%</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-user-check text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500">Progress Hafalan</p>
+                        <p id="hafalanProgress" class="text-3xl font-bold text-purple-600">0%</p>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-book-quran text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Schedule for Selected Student -->
+        <div id="jadwal-anak" class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-blue-900">Jadwal Anak Hari Ini</h2>
+                <a href="jadwal-siswa.html" class="text-blue-900 hover:underline">Lihat Semua</a>
+            </div>
+            
+            <div id="studentSchedule" class="space-y-4">
+                <p class="text-gray-500">Pilih anak untuk melihat jadwal.</p>
+            </div>
+        </div>
+
+        <!-- Attendance Section for Selected Student -->
+        <div id="absensi-anak" class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-blue-900">Absensi Anak Terkini</h2>
+                <a href="absensi-siswa.html" class="text-blue-900 hover:underline">Lihat Detail</a>
+            </div>
+            
+            <div id="attendanceProgressBar" class="relative h-4 bg-gray-200 rounded-full mb-2">
+                <div class="h-full bg-green-500 rounded-full" style="width: 0%"></div>
+            </div>
+            <div id="attendanceSummaryText" class="flex justify-between text-sm text-gray-600 mb-6">
+                <span>0% Hadir (0 hari)</span>
+                <span>0% Tidak Hadir (0 hari)</span>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-check text-green-700 text-2xl"></i>
+                    </div>
+                    <span class="text-sm">Hadir</span>
+                </div>
+                <div class="text-center">
+                    <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-times text-red-700 text-2xl"></i>
+                    </div>
+                    <span class="text-sm">Tidak Hadir</span>
+                </div>
+                <div class="text-center">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-clock text-yellow-700 text-2xl"></i>
+                    </div>
+                    <span class="text-sm">Terlambat</span>
+                </div>
+                <div class="text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-info text-blue-700 text-2xl"></i>
+                    </div>
+                    <span class="text-sm">Izin/Sakit</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Performance (Memorization) for Selected Student -->
+        <div id="hafalan-anak" class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-blue-900">Progress Hafalan Anak</h2>
+                <a href="hafalan-siswa.html" class="text-blue-900 hover:underline">Lihat Semua</a>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Surah</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ayat</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hafalan-detail-body" class="bg-white divide-y divide-gray-200">
+                        <tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Pilih anak untuk melihat detail hafalan.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { studentDB, scheduleDB, attendanceDB, hafalanDB, gradeDB, DAY_NAMES_ID } from '../js/database.js';
+
+        // Global variable to store the currently selected student's ID
+        let selectedStudentId = '';
+        let currentParentId = 'P001'; // Hardcoded for demo, replace with actual parent ID from login
+
+        // Function to update the date dynamically
+        async function updateCurrentDate() {
+            const dateElement = document.getElementById('currentDate');
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+            try {
+                const response = await fetch('https://worldtimeapi.org/api/ip');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                const datetime = new Date(data.datetime);
+                const dayName = days[datetime.getDay()];
+                const day = datetime.getDate();
+                const month = months[datetime.getMonth()];
+                const year = datetime.getFullYear();
+                dateElement.textContent = `${dayName}, ${day} ${month} ${year}`;
+            } catch (error) {
+                console.error('Failed to fetch date from internet:', error);
+                const now = new Date();
+                const dayName = days[now.getDay()];
+                const day = now.getDate();
+                const month = months[now.getMonth()];
+                const year = now.getFullYear();
+                dateElement.textContent = `${dayName}, ${day} ${month} ${year}`;
+            }
+        }
+
+        // Function to fetch current time from internet and update greeting accordingly
+        async function updateGreeting() {
+            try {
+                const response = await fetch('https://worldtimeapi.org/api/ip');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                const datetime = new Date(data.datetime);
+                const hour = datetime.getHours();
+                let greetingText = 'Selamat Malam';
+
+                if (hour >= 4 && hour < 10) {
+                    greetingText = 'Selamat Pagi';
+                } else if (hour >= 10 && hour < 15) {
+                    greetingText = 'Selamat Siang';
+                } else if (hour >= 15 && hour < 18) {
+                    greetingText = 'Selamat Sore';
+                } else {
+                    greetingText = 'Selamat Malam';
+                }
+
+                const greetingElement = document.getElementById('greeting');
+                const selectedStudent = studentDB.getStudentById(selectedStudentId);
+                const parentName = selectedStudent ? `Orang Tua ${selectedStudent.name.split(' ')[0]}` : 'Orang Tua/wali';
+                if (greetingElement) {
+                    greetingElement.textContent = `${greetingText}, ${parentName}`;
+                }
+            } catch (error) {
+                console.error('Failed to fetch time from internet:', error);
+                const now = new Date();
+                const hour = now.getHours();
+                let greetingText = 'Selamat Malam';
+
+                if (hour >= 4 && hour < 10) {
+                    greetingText = 'Selamat Pagi';
+                } else if (hour >= 10 && hour < 15) {
+                    greetingText = 'Selamat Siang';
+                } else if (hour >= 15 && hour < 18) {
+                    greetingText = 'Selamat Sore';
+                } else {
+                    greetingText = 'Selamat Malam';
+                }
+
+                const greetingElement = document.getElementById('greeting');
+                const selectedStudent = studentDB.getStudentById(selectedStudentId);
+                const parentName = selectedStudent ? `Orang Tua ${selectedStudent.name.split(' ')[0]}` : 'Orang Tua/wali';
+                if (greetingElement) {
+                    greetingElement.textContent = `${greetingText}, ${parentName}`;
+                }
+            }
+        }
+
+        // Populate student selector dropdown
+        function populateStudentSelector() {
+            const studentSelector = document.getElementById('studentSelector');
+            const parentStudents = studentDB.getStudentsByParentId(currentParentId);
+
+            studentSelector.innerHTML = ''; // Clear existing options
+
+            if (parentStudents.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'Tidak ada anak terdaftar';
+                studentSelector.appendChild(option);
+                studentSelector.disabled = true;
+                return;
+            }
+
+            parentStudents.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = student.name;
+                studentSelector.appendChild(option);
+            });
+
+            // Set the first child as default selected
+            if (parentStudents.length > 0) {
+                selectedStudentId = parentStudents[0].id;
+                studentSelector.value = selectedStudentId;
+                renderAllStudentData(selectedStudentId);
+            }
+
+            studentSelector.addEventListener('change', (event) => {
+                selectedStudentId = event.target.value;
+                renderAllStudentData(selectedStudentId);
+                updateGreeting(); // Update greeting when student changes
+            });
+        }
+
+        // Render Today's Schedule for a specific student
+        function renderStudentSchedule(studentId) {
+            const scheduleContainer = document.getElementById('studentSchedule');
+            scheduleContainer.innerHTML = '';
+            const today = new Date();
+            const dayName = DAY_NAMES_ID[new Date().toLocaleString('en-US', { weekday: 'long' })]; // Get English day name then map to Indonesian
+
+            const studentTodaySchedule = scheduleDB.getScheduleByStudentId(studentId)
+                                            .filter(item => DAY_NAMES_ID[item.day] === dayName); // Filter by Indonesian day name
+
+            if (studentTodaySchedule.length === 0) {
+                scheduleContainer.innerHTML = '<p class="text-gray-500">Tidak ada jadwal untuk anak ini hari ini.</p>';
+                return;
+            }
+
+            studentTodaySchedule.sort((a, b) => a.time.localeCompare(b.time)).forEach(item => {
+                const scheduleItem = document.createElement('div');
+                scheduleItem.className = 'flex items-center p-4 border border-gray-100 rounded-lg hover:bg-gray-50';
+                scheduleItem.innerHTML = `
+                    <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-book text-blue-900 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">${item.subject}</h3>
+                        <p class="text-sm text-gray-500">${item.time} • Kelas ${item.class}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Sedang Berlangsung</span>
+                    </div>
+                `;
+                scheduleContainer.appendChild(scheduleItem);
+            });
+        }
+
+        // Render Attendance Summary for a specific student
+        function renderStudentAttendance(studentId) {
+            const attendanceSummary = attendanceDB.getSummaryForStudent(studentId);
+
+            const totalDays = attendanceSummary.total;
+            const presentCount = attendanceSummary.hadir;
+            const absentCount = attendanceSummary.alfa + attendanceSummary.sakit + attendanceSummary.izin;
+            
+            const presentPercentage = totalDays > 0 ? Math.round((presentCount / totalDays) * 100) : 0;
+
+            const progressBar = document.querySelector('#attendanceProgressBar .bg-green-500');
+            const summaryText = document.getElementById('attendanceSummaryText');
+            const monthlyAttendanceElement = document.getElementById('monthlyAttendance');
+
+            if (progressBar) {
+                progressBar.style.width = `${presentPercentage}%`;
+            }
+            if (summaryText) {
+                summaryText.innerHTML = `
+                    <span>${presentPercentage}% Hadir (${presentCount} hari)</span>
+                    <span>${100 - presentPercentage}% Tidak Hadir (${absentCount} hari)</span>
+                `;
+            }
+            if (monthlyAttendanceElement) {
+                monthlyAttendanceElement.textContent = `${presentPercentage}%`;
+            }
+        }
+
+        // Render Hafalan Details for a specific student
+        function renderStudentHafalan(studentId) {
+            const hafalanBody = document.getElementById('hafalan-detail-body');
+            hafalanBody.innerHTML = '';
+            const studentHafalan = hafalanDB.getDetailForStudent(studentId);
+
+            if (studentHafalan.length === 0) {
+                hafalanBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data hafalan untuk anak ini.</td></tr>';
+                document.getElementById('hafalanProgress').textContent = '0%';
+                return;
+            }
+
+            let totalProgressValue = 0;
+            let totalHafalanEntries = 0;
+            const maxProgressPerEntry = 100; // Assuming each entry contributes up to 100%
+
+            studentHafalan.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.surah}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.ayat}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.grade}</td>
+                `;
+                hafalanBody.appendChild(tr);
+
+                totalProgressValue += item.grade; // Using grade as a proxy for progress
+                totalHafalanEntries++;
+            });
+
+            const overallHafalanProgress = totalHafalanEntries > 0 ? Math.round((totalProgressValue / (totalHafalanEntries * maxProgressPerEntry)) * 100) : 0;
+            document.getElementById('hafalanProgress').textContent = `${overallHafalanProgress}%`;
+        }
+
+        // Render Grades Details for a specific student
+        function renderStudentGrades(studentId) {
+            const gradesBody = document.getElementById('grades-detail-body');
+            gradesBody.innerHTML = '';
+            const studentGrades = gradeDB.getGradesByStudentId(studentId);
+
+            if (studentGrades.length === 0) {
+                gradesBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">Tidak ada data nilai untuk anak ini.</td></tr>';
+                document.getElementById('averageGrade').textContent = 'N/A';
+                return;
+            }
+
+            let totalAverageGrade = 0;
+            studentGrades.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.subject}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.lastGrade}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.average}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.description}</td>
+                `;
+                gradesBody.appendChild(tr);
+                totalAverageGrade += item.average;
+            });
+
+            const overallAverage = studentGrades.length > 0 ? Math.round(totalAverageGrade / studentGrades.length) : 'N/A';
+            document.getElementById('averageGrade').textContent = overallAverage;
+        }
+
+        // Function to render all data for the selected student
+        function renderAllStudentData(studentId) {
+            renderStudentSchedule(studentId);
+            renderStudentAttendance(studentId);
+            renderStudentHafalan(studentId);
+            renderStudentGrades(studentId);
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await updateCurrentDate();
+            populateStudentSelector(); // This will also call renderAllStudentData for the first student
+            await updateGreeting(); // Call after student selector is populated to get student name
+            
+        });
+
+        // Event listeners for profile dropdown
+        const profileToggle = document.getElementById('profileToggle');
+        const profileMenu = document.getElementById('profileMenu');
+
+        if (profileToggle && profileMenu) {
+            profileToggle.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent click from propagating to document
+                profileMenu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!profileToggle.contains(event.target) && !profileMenu.contains(event.target)) {
+                    profileMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        // Listen for localStorage changes to update data dynamically
+        window.addEventListener('storage', (event) => {
+            // Only re-render if relevant localStorage keys change
+            if ([studentDB.key, scheduleDB.key, attendanceDB.key, hafalanDB.key, gradeDB.key].includes(event.key)) {
+                populateStudentSelector(); // Re-populate in case student list changes
+                if (selectedStudentId) {
+                    renderAllStudentData(selectedStudentId);
+                }
+                updateGreeting(); // Update greeting if student data changes
+            }
+        });
+
+        // Periodically refresh data every 5 seconds (optional, localStorage 'storage' event is usually sufficient)
+        // setInterval(() => {
+        //     if (selectedStudentId) {
+        //         renderAllStudentData(selectedStudentId);
+        //     }
+        // }, 5000);
+    </script>
+</body>
+</html>

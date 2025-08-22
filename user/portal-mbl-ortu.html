@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Pengguna Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #f72585;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --success: #4cc9f0;
+            --glass: rgba(255, 255, 255, 0.25);
+            --shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            --border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(247, 37, 133, 0.1) 0%, transparent 20%);
+        }
+        
+        .portal-container {
+            width: 90%;
+            max-width: 420px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: var(--border);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .portal-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(67,97,238,0.1) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            animation: rotate 15s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .portal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 1rem;
+            display: block;
+        }
+        
+        h1 {
+            color: var(--dark);
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        
+        p.subtitle {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .portal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .portal-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+        
+        .portal-card.logout::before {
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff4d6d 100%);
+        }
+        
+        .portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+        
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .portal-card:hover .card-content {
+            color: white;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .portal-card:hover .card-icon {
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .logout .card-icon {
+            color: var(--secondary);
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .portal-card:hover .card-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            background: var(--light);
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.1);
+        }
+        
+        .portal-card:hover .btn {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .logout .btn {
+            color: var(--secondary);
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <div class="portal-header">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Foto profil pengguna dengan latar belakang blur dan penampilan profesional" class="user-avatar floating">
+            <h1>Selamat Datang</h1>
+            <p class="subtitle">Apa yang ingin Anda lakukan hari ini?</p>
+        </div>
+        
+        <div class="portal-options">
+            <div class="portal-card" onclick="location.href='profile.html'">
+                <div class="card-content">
+                    <i class="fas fa-user-circle card-icon"></i>
+                    <h3 class="card-title">Profil Saya</h3>
+                    <p class="card-desc">Kelola informasi akun dan pengaturan pribadi Anda</p>
+                    <button class="btn">Masuk ke Profil</button>
+                </div>
+            </div>
+            
+            <div class="portal-card logout" onclick="location.href='login-ortu.html'">
+                <div class="card-content">
+                    <i class="fas fa-sign-out-alt card-icon"></i>
+                    <h3 class="card-title">Logout</h3>
+                    <p class="card-desc">Keluar dari akun Anda dengan aman</p>
+                    <button class="btn">Keluar Sekarang</button>
+                </div>
+            </div>
+        </div>
+        
+        <p class="footer-text">© 2025 by EXA smart All rights reserved.</p>
+    </div>
+</body>
+</html>
