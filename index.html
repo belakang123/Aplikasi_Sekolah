@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sekolah Digital - Beranda</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .btn-primary {
+            background-color: #009B77;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #007a5a;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="nav-gradient text-white">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital" class="w-10 h-10 rounded" />
+                <span class="text-xl font-bold">Sekolah Digital</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="portal.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center hover:bg-opacity-40">
+                    <i class="fas fa-home mr-2"></i>Beranda
+                </a>
+                <a href="portal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                    <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                </a>
+                <a href="portal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                    <i class="fas fa-user-check mr-2"></i>Absensi
+                </a>
+                <a href="portal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                    <i class="fas fa-book-quran mr-2"></i>Hafalan
+                </a>
+                <a href="portal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                    <i class="fas fa-users mr-2"></i>Daftar Siswa
+                </a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobileMenuButton" aria-label="Toggle menu" class="focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white text-blue-900">
+            <a href="portal.html" class="block px-4 py-3 border-b border-gray-200 hover:bg-gray-100 flex items-center">
+                <i class="fas fa-home mr-2"></i>Beranda
+            </a>
+            <a href="portal.html" class="block px-4 py-3 border-b border-gray-200 hover:bg-gray-100 flex items-center">
+                <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+            </a>
+            <a href="portal.html" class="block px-4 py-3 border-b border-gray-200 hover:bg-gray-100 flex items-center">
+                <i class="fas fa-user-check mr-2"></i>Absensi
+            </a>
+            <a href="portal.html" class="block px-4 py-3 border-b border-gray-200 hover:bg-gray-100 flex items-center">
+                <i class="fas fa-book-quran mr-2"></i>Hafalan
+            </a>
+            <a href="portal.html" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
+                <i class="fas fa-users mr-2"></i>Daftar Siswa
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="flex-grow bg-white shadow-md">
+        <div class="container mx-auto px-6 py-20 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 mb-4">
+                Selamat Datang di Sekolah Digital
+            </h1>
+            <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+                Aplikasi pendidikan terintegrasi untuk memudahkan pengelolaan sekolah dan pembelajaran digital.
+            </p>
+            <a href="portal.html" class="btn-primary inline-block px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition">
+                Lihat Daftar Siswa
+            </a>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="container mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <i class="fas fa-users text-4xl text-blue-900 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Manajemen Siswa</h3>
+            <p class="text-gray-600">
+                Kelola data siswa dengan mudah, termasuk absensi, progres hafalan, dan informasi penting lainnya.
+            </p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <i class="fas fa-calendar-alt text-4xl text-green-600 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Jadwal Terintegrasi</h3>
+            <p class="text-gray-600">
+                Atur jadwal pelajaran dan kegiatan sekolah secara terpusat dan mudah diakses.
+            </p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <i class="fas fa-user-check text-4xl text-yellow-600 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Absensi Real-time</h3>
+            <p class="text-gray-600">
+                Pantau kehadiran siswa secara real-time dengan fitur pengisian absensi dan laporan lengkap.
+            </p>
+        </div>
+    </section>
+
+    <!-- Additional Application Info Section -->
+    <section class="container mx-auto px-6 py-16 bg-white rounded-xl shadow-md mt-12 animate-fadeIn">
+        <h2 class="text-4xl font-extrabold text-blue-900 mb-8 text-center animate-bounce">Mengapa Memilih Sekolah Digital?</h2>
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="p-6 bg-green-50 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-500 ease-in-out animate-slideInLeft">
+                <h3 class="text-2xl font-semibold mb-4 text-green-700">Solusi Lengkap</h3>
+                <p class="text-gray-700">
+                    Sekolah Digital menyediakan solusi lengkap untuk pengelolaan sekolah yang efisien dan modern. Dengan fitur-fitur canggih seperti manajemen siswa, jadwal terintegrasi, dan absensi real-time, aplikasi ini membantu guru dan staf sekolah dalam menjalankan tugas sehari-hari dengan lebih mudah dan cepat.
+                </p>
+            </div>
+            <div class="p-6 bg-blue-50 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-500 ease-in-out animate-slideInUp">
+                <h3 class="text-2xl font-semibold mb-4 text-blue-700">Pembelajaran Jarak Jauh</h3>
+                <p class="text-gray-700">
+                    Mendukung pembelajaran jarak jauh dengan akses materi dan tugas secara online, sehingga siswa dapat belajar kapan saja dan di mana saja. Fitur interaktif dan komunikasi real-time membuat proses belajar menjadi lebih efektif dan menyenangkan.
+                </p>
+            </div>
+            <div class="p-6 bg-yellow-50 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-500 ease-in-out animate-slideInRight">
+                <h3 class="text-2xl font-semibold mb-4 text-yellow-700">Kemudahan Pengelolaan</h3>
+                <p class="text-gray-700">
+                    Bergabunglah dengan Sekolah Digital dan rasakan kemudahan dalam mengelola sekolah Anda secara digital dan terintegrasi. Sistem yang user-friendly dan dukungan teknis siap membantu kapan saja.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 text-gray-700 py-8 mt-auto">
+        <div class="container mx-auto px-6 text-center text-sm">
+            &copy; 2025 by EXA smart. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
+
