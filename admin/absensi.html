@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sekolah Digital - Aplikasi Pendidikan Terintegrasi</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .student-card {
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        #summaryTable {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #summaryTable th, #summaryTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        #summaryTable th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+        #summaryTable tfoot td {
+            font-weight: 700;
+            background-color: #e5e7eb;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (Web) -->
+    <nav class="nav-gradient text-white hidden md:block">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital - Kotak biru navy dengan ikon buku putih di tengah" class="w-10 h-10 rounded" />
+                    <span class="text-xl font-bold">Sekolah Digital</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="beranda.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+                    <a href="jadwal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="absensi.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>Absensi
+                    </a>
+                    <a href="hafalan.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-book-quran mr-2"></i>Hafalan
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4 relative">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer" id="profileToggle">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1973089b-fe1c-40dd-a6d0-117bffc0113b.png" alt="Foto profil pengguna" class="w-10 h-10 rounded-full border border-gray-300" />
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm leading-tight">Guru Ahmad</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-500 text-lg"></i> <!-- Changed to chevron-down for dropdown indication -->
+                    </div>
+
+                    <!-- Profile Dropdown Menu -->
+                    <div id="profileMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-50 border border-gray-200">
+                        <a href="profil.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-user mr-2"></i>Profil
+                        </a>
+                        <a href="daftar_siswa.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-users mr-2"></i>Daftar Siswa
+                        </a>
+                        <a href="nilai_raport.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-file-alt mr-2"></i>Nilai & Raport
+                        </a>
+                        <div class="border-t border-gray-200"></div>
+                        <a href="#" class="logout-btn block px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 w-full bg-white shadow-lg">
+        <div class="flex justify-around py-3">
+            <a href="beranda.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="jadwal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs mt-1">Jadwal</span>
+            </a>
+            <a href="absensi.html" class="flex flex-col items-center text-blue-900">
+                <i class="fas fa-user-check text-xl"></i>
+                <span class="text-xs mt-1">Absensi</span>
+            </a>
+            <a href="hafalan.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-book-quran text-xl"></i>
+                <span class="text-xs mt-1">Hafalan</span>
+            </a>
+            <a href="portal-mlb-admin.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Absensi Section -->
+    <section id="absensi" class="tab-content container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-semibold mb-6">Absensi Siswa</h2>
+        <div class="flex flex-col md:flex-row md:items-center mb-4 space-y-4 md:space-y-0 md:space-x-4">
+            <div class="flex items-center">
+                <label for="bulan-absensi-app" class="font-semibold mr-4">Pilih Bulan:</label>
+                <select id="bulan-absensi-app" class="p-2 border rounded-lg text-sm"></select>
+            </div>
+            <div class="flex items-center">
+                <label for="kelas-absensi-app" class="font-semibold mr-4">Pilih Kelas:</label>
+                <select id="kelas-absensi-app" class="p-2 border rounded-lg text-sm"></select>
+            </div>
+        </div>
+        <div class="attendance-list" aria-live="polite" aria-relevant="additions removals">
+            <!-- Attendance checkboxes and table will be generated here -->
+        </div>
+        <button id="save-attendance" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
+            Simpan Absensi
+        </button>
+    </section>
+
+    <!-- Student List Modal (unchanged) -->
+    <div id="studentListModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-20">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Daftar Siswa</h3>
+                <button class="text-gray-500 hover:text-gray-700" onclick="closeStudentList()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="space-y-2 max-h-64 overflow-y-auto">
+                <li v-for="student in students" class="text-gray-700 border-b py-2">{{ student.name }} - {{ student.class }}</li>
+            </ul>
+            <div class="mt-4 text-right">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="closeStudentList()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { studentDB, attendanceDB } from '../js/database.js';
+
+        let students = []; // Akan dimuat dari DB
+        let attendance = {}; // Akan dimuat dari DB
+
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        
+        let activeClass = ''; // To store the currently selected class
+
+        document.addEventListener('DOMContentLoaded', () => {
+            students = studentDB.getAll(); // Muat data siswa
+            attendance = attendanceDB.load(); // Muat data absensi
+
+            const now = new Date();
+            const dayName = days[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const dateElement = document.querySelector('.text-gray-600');
+            if (dateElement) {
+                dateElement.textContent = `${dayName}, ${day} ${month} ${year}`;
+            }
+
+            populateMonthDropdown();
+            populateClassDropdown();
+            
+            // Set initial active class to the first available class or a default
+            const uniqueClasses = studentDB.getUniqueClasses();
+            if (uniqueClasses.length > 0) {
+                activeClass = uniqueClasses[0];
+                document.getElementById('kelas-absensi-app').value = activeClass;
+            }
+
+            renderAttendance();
+
+            // Event listeners for profile dropdown
+            const profileToggle = document.getElementById('profileToggle');
+            const profileMenu = document.getElementById('profileMenu');
+
+            if (profileToggle && profileMenu) {
+                profileToggle.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent click from propagating to document
+                    profileMenu.classList.toggle('hidden');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!profileToggle.contains(event.target) && !profileMenu.contains(event.target)) {
+                        profileMenu.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+        function populateMonthDropdown() {
+            const bulanSelect = document.getElementById('bulan-absensi-app');
+            bulanSelect.innerHTML = ''; // Clear existing options
+
+            months.forEach((bulan, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx + 1;
+                opt.textContent = bulan;
+                bulanSelect.appendChild(opt);
+            });
+
+            const currentMonth = new Date().getMonth() + 1;
+            bulanSelect.value = currentMonth;
+
+            bulanSelect.addEventListener('change', renderAttendance);
+        }
+
+        function populateClassDropdown() {
+            const kelasSelect = document.getElementById('kelas-absensi-app');
+            kelasSelect.innerHTML = ''; // Clear existing options
+
+            const uniqueClasses = studentDB.getUniqueClasses();
+            if (uniqueClasses.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'Tidak ada kelas';
+                kelasSelect.appendChild(opt);
+                kelasSelect.disabled = true;
+            } else {
+                kelasSelect.disabled = false;
+                uniqueClasses.forEach(kelas => {
+                    const opt = document.createElement('option');
+                    opt.value = kelas;
+                    opt.textContent = kelas;
+                    kelasSelect.appendChild(opt);
+                });
+            }
+
+            kelasSelect.addEventListener('change', function() {
+                activeClass = this.value;
+                renderAttendance();
+            });
+        }
+
+        function renderAttendance() {
+            const container = document.querySelector('.attendance-list');
+            if (!container) {
+                console.error('Attendance list container not found.');
+                return;
+            }
+            container.innerHTML = ''; // Clear previous content
+
+            const bulanAktif = parseInt(document.getElementById('bulan-absensi-app').value);
+            activeClass = document.getElementById('kelas-absensi-app').value;
+
+            renderAbsensiTableApp(bulanAktif, activeClass);
+            updateSummaryTable(); // Update summary table after rendering attendance
+        }
+
+        function renderAbsensiTableApp(bulanAktif, kelasAktif) {
+            const container = document.querySelector('.attendance-list');
+            if (!container) {
+                console.error('Attendance list container not found in renderAbsensiTableApp.');
+                return;
+            }
+            
+            // Filter students by active class
+            const filteredStudents = students.filter(student => student.class === kelasAktif);
+
+            const hari = new Date(new Date().getFullYear(), bulanAktif, 0).getDate();
+
+            // Create a scrollable wrapper for the table
+            const scrollWrapper = document.createElement('div');
+            scrollWrapper.className = 'overflow-x-auto';
+
+            const table = document.createElement('table');
+            table.className = 'absensi-table min-w-full bg-white rounded-lg shadow';
+
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            trHead.className = 'bg-gray-100 text-gray-700';
+            trHead.innerHTML = '<th class="py-3 px-4 text-left">Nama Siswa</th>';
+
+            for (let i = 1; i <= hari; i++) {
+                const th = document.createElement('th');
+                th.textContent = i;
+                th.style.minWidth = '40px';
+                th.className = 'py-3 px-4';
+                trHead.appendChild(th);
+            }
+
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            if (filteredStudents.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = hari + 1;
+                td.textContent = 'Tidak ada siswa di kelas ini.';
+                td.className = 'py-3 px-4 text-center text-gray-500';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            } else {
+                filteredStudents.forEach(student => {
+                    const tr = document.createElement('tr');
+
+                    const tdNama = document.createElement('td');
+                    tdNama.textContent = student.name;
+                    tdNama.className = 'py-3 px-4 border-b';
+                    tr.appendChild(tdNama);
+
+                    for (let h = 1; h <= hari; h++) {
+                        const td = document.createElement('td');
+                        td.style.textAlign = 'center';
+                        td.className = 'py-3 px-4 border-b';
+
+                        // Pastikan struktur attendance[bulanAktif][student.id] ada
+                        if (!attendance[bulanAktif]) attendance[bulanAktif] = {};
+                        if (!attendance[bulanAktif][student.id]) attendance[bulanAktif][student.id] = {};
+
+                        const status = attendance[bulanAktif][student.id][h] || '';
+                        const select = document.createElement('select');
+                        select.style = 'padding:2px 6px; border-radius:6px; font-size:13px; background:#f0f8ff; margin-top:4px;';
+                        ['', 'Hadir', 'Sakit', 'Izin', 'Alfa'].forEach(opt => {
+                            const option = document.createElement('option');
+                            option.value = opt;
+                            option.textContent = opt || '-';
+                            select.appendChild(option);
+                        });
+
+                        select.value = status;
+                        select.addEventListener('change', function () {
+                            attendance[bulanAktif][student.id][h] = select.value;
+                            attendanceDB.save(attendance); // Simpan ke DB
+                            synchronizeAttendanceSummary();
+                            updateSummaryTable();
+                        });
+
+                        td.appendChild(select);
+                        tr.appendChild(td);
+                    }
+                    tbody.appendChild(tr);
+                });
+            }
+
+            table.appendChild(tbody);
+            scrollWrapper.appendChild(table);
+            container.appendChild(scrollWrapper);
+        }
+
+        document.getElementById('save-attendance').addEventListener('click', () => {
+            attendanceDB.save(attendance); // Simpan ke DB
+            synchronizeAttendanceSummary();
+            updateSummaryTable();
+            alert('Absensi berhasil disimpan!');
+        });
+
+        function synchronizeAttendanceSummary() {
+            const attendanceDataSummary = []; // Ubah nama variabel agar tidak bentrok dengan attendance global
+            const currentMonth = parseInt(document.getElementById('bulan-absensi-app').value);
+            const hari = new Date(new Date().getFullYear(), currentMonth, 0).getDate();
+
+            students.forEach(student => {
+                let hadirCount = 0;
+                let tidakHadirCount = 0; // Izin + Alfa
+                let terlambatCount = 0; // Assuming 'Terlambat' is a status option
+                let sakitCount = 0;
+                let izinCount = 0;
+                let alfaCount = 0;
+
+                for (let day = 1; day <= hari; day++) {
+                    const status = attendance[currentMonth]?.[student.id]?.[day] || '';
+                    if (status === 'Hadir') {
+                        hadirCount++;
+                    } else if (status === 'Sakit') {
+                        sakitCount++;
+                        tidakHadirCount++;
+                    } else if (status === 'Izin') {
+                        izinCount++;
+                        tidakHadirCount++;
+                    } else if (status === 'Alfa') {
+                        alfaCount++;
+                        tidakHadirCount++;
+                    } else if (status === 'Terlambat') {
+                        terlambatCount++;
+                    }
+                }
+
+                // Determine overall status for the month (simplified for summary)
+                let overallStatus = 'Tidak Ada Data';
+                if (hadirCount > 0 || tidakHadirCount > 0 || terlambatCount > 0) {
+                    if (hadirCount >= (hari / 2)) { // More than half days present
+                        overallStatus = 'Hadir';
+                    } else if (tidakHadirCount > hadirCount) {
+                        overallStatus = 'Tidak Hadir';
+                    } else {
+                        overallStatus = 'Campuran'; // Mix of statuses
+                    }
+                }
+
+                attendanceDataSummary.push({
+                    id: student.id,
+                    name: student.name,
+                    class: student.class,
+                    status: overallStatus, // This is a simplified status for the summary
+                    hadir: hadirCount,
+                    sakit: sakitCount,
+                    izin: izinCount,
+                    alfa: alfaCount,
+                    terlambat: terlambatCount
+                });
+            });
+            // Simpan ringkasan absensi ke localStorage dengan key terpisah jika diperlukan oleh beranda.html
+            localStorage.setItem('attendanceDataSummary', JSON.stringify(attendanceDataSummary));
+        }
+
+        // Removed the old toggleProfileMenu function as it's now handled by event listeners
+
+        function showStudentList() {
+            document.getElementById('studentListModal').classList.remove('hidden');
+        }
+
+        function closeStudentList() {
+            document.getElementById('studentListModal').classList.add('hidden');
+        }
+
+        function updateSummaryTable() {
+            const container = document.querySelector('.attendance-list');
+            if (!container) return;
+
+            // Remove existing summary table if any
+            const existingTable = document.getElementById('summaryTable');
+            if (existingTable) existingTable.remove();
+
+            const currentMonth = parseInt(document.getElementById('bulan-absensi-app').value);
+            const kelasAktif = document.getElementById('kelas-absensi-app').value;
+            const hari = new Date(new Date().getFullYear(), currentMonth, 0).getDate();
+
+            // Filter students by active class for the summary table
+            const filteredStudents = students.filter(student => student.class === kelasAktif);
+
+            // Create table
+            const table = document.createElement('table');
+            table.id = 'summaryTable';
+
+            // Header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            ['NAMA', 'HADIR', 'SAKIT', 'IZIN', 'ALFA'].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Body
+            const tbody = document.createElement('tbody');
+
+            // Totals for footer
+            let totalHadir = 0, totalSakit = 0, totalIzin = 0, totalAlfa = 0;
+
+            if (filteredStudents.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 5;
+                td.textContent = 'Tidak ada data absensi untuk kelas ini.';
+                td.className = 'py-3 px-4 text-center text-gray-500';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            } else {
+                filteredStudents.forEach(student => {
+                    const tr = document.createElement('tr');
+                    const tdName = document.createElement('td');
+                    tdName.textContent = student.name;
+                    tdName.style.textAlign = 'left';
+                    tr.appendChild(tdName);
+
+                    let hadirCount = 0, sakitCount = 0, izinCount = 0, alfaCount = 0;
+
+                    for (let day = 1; day <= hari; day++) {
+                        const status = attendance[currentMonth]?.[student.id]?.[day] || '';
+                        if (status === 'Hadir') hadirCount++;
+                        else if (status === 'Sakit') sakitCount++;
+                        else if (status === 'Izin') izinCount++;
+                        else if (status === 'Alfa') alfaCount++;
+                    }
+
+                    totalHadir += hadirCount;
+                    totalSakit += sakitCount;
+                    totalIzin += izinCount;
+                    totalAlfa += alfaCount;
+
+                    [hadirCount, sakitCount, izinCount, alfaCount].forEach(count => {
+                        const td = document.createElement('td');
+                        td.textContent = count;
+                        tr.appendChild(td);
+                    });
+
+                    tbody.appendChild(tr);
+                });
+            }
+
+            table.appendChild(tbody);
+
+            // Footer row for totals
+            const tfoot = document.createElement('tfoot');
+            const footerRow = document.createElement('tr');
+
+            const tdTotalLabel = document.createElement('td');
+            tdTotalLabel.textContent = 'TOTAL';
+            tdTotalLabel.style.textAlign = 'left';
+            footerRow.appendChild(tdTotalLabel);
+
+            [totalHadir, totalSakit, totalIzin, totalAlfa].forEach(total => {
+                const td = document.createElement('td');
+                td.textContent = total;
+                footerRow.appendChild(td);
+            });
+
+            tfoot.appendChild(footerRow);
+            table.appendChild(tfoot);
+
+            container.appendChild(table);
+        }
+
+        // Listen for localStorage changes (e.g., if students data changes from daftar_siswa.html)
+        window.addEventListener('storage', (event) => {
+            if (event.key === studentDB.key) {
+                students = studentDB.getAll(); // Reload students data
+                populateClassDropdown(); // Re-populate classes if students data changes
+                renderAttendance(); // Re-render attendance in case a class was removed/added
+            }
+            if (event.key === attendanceDB.key) {
+                attendance = attendanceDB.load(); // Reload attendance data
+                renderAttendance(); // Re-render attendance
+            }
+        });
+    </script>
+</body>
+</html>

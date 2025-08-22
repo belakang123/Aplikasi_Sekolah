@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sekolah Digital - Aplikasi Pendidikan Terintegrasi</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-gradient {
+            background: linear-gradient(135deg, #001F3F 0%, #009B77 100%);
+        }
+        .student-card {
+            transition: transform 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* --- Table Specific Styles for PDF-like appearance --- */
+        .monitoring-list-wrapper {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch;
+            width: 100%; /* Take full width of its parent */
+            border-radius: 0.5rem; /* Rounded corners for the wrapper */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* Shadow for the wrapper */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%; /* Table takes full width of its scrollable container */
+            /* min-width will be set dynamically by JS or implicitly by column widths */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px; /* Adjusted padding for cells */
+            vertical-align: top; /* Align content to top */
+            text-align: center;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+            position: sticky; /* Make header sticky */
+            top: 0; /* Stick to the top of the scrollable container */
+            z-index: 2; /* Ensure header is above content */
+            height: 48px; /* Fixed height for header cells */
+            white-space: nowrap; /* Prevent header text from wrapping */
+        }
+
+        /* Sticky first column (Nama Siswa) */
+        th:first-child, td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #fafafa; /* Background for sticky cell */
+            z-index: 3; /* Higher z-index to be above other sticky elements */
+            min-width: 180px; /* Minimum width for student name column */
+            max-width: 180px; /* Maximum width for student name column */
+            width: 180px; /* Fixed width for student name column */
+            text-align: left;
+            white-space: nowrap; /* Prevent student names from wrapping */
+            overflow: hidden; /* Hide overflow if name is too long */
+            text-overflow: ellipsis; /* Add ellipsis for long names */
+        }
+
+        /* Adjust z-index for the corner cell (th:first-child) */
+        th:first-child {
+            z-index: 4; /* Highest z-index for the top-left corner */
+        }
+
+        /* Daily columns (1, 2, 3, ...) */
+        th:not(:first-child), td:not(:first-child) {
+            min-width: 150px; /* Diperlebar dari 100px menjadi 150px */
+            width: 150px; /* Diperlebar dari 100px menjadi 150px */
+            max-width: 150px;
+            white-space: normal; /* Allow content inside to wrap */
+        }
+
+        /* Container for inputs within a daily cell */
+        td > div.input-container {
+            display: flex;
+            flex-direction: column; /* Stack inputs vertically */
+            gap: 4px; /* Sedikit memperlebar gap antar input */
+            align-items: center; /* Center inputs horizontally */
+            justify-content: center;
+            height: 100%; /* Ensure container takes full height of cell */
+        }
+
+        /* Styles for input fields */
+        td > div.input-container > input {
+            width: 98%; /* Diperlebar dari 95% menjadi 98% agar lebih mengisi ruang */
+            box-sizing: border-box;
+            font-size: 13px; /* Sedikit diperbesar dari 12px */
+            padding: 4px; /* Sedikit diperbesar dari 3px */
+            border-radius: 4px; /* Sedikit diperbesar dari 3px */
+            border: 1px solid #ccc; /* Add border for clarity */
+            text-align: center; /* Center text within input */
+        }
+
+        /* No data message */
+        .no-data {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation (Web) -->
+    <nav class="nav-gradient text-white hidden md:block">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8676ecdf-8923-4445-8797-ef1b4bef5883.png" alt="Logo Sekolah Digital - Kotak biru navy dengan ikon buku putih di tengah" class="w-10 h-10 rounded" />
+                    <span class="text-xl font-bold">Sekolah Digital</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="beranda.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+                    <a href="jadwal.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>Jadwal
+                    </a>
+                    <a href="absensi.html" class="px-3 py-2 hover:bg-white hover:bg-opacity-20 rounded-lg flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>Absensi
+                    </a>
+                    <a href="hafalan.html" class="px-3 py-2 rounded-lg bg-white bg-opacity-20 flex items-center">
+                        <i class="fas fa-book-quran mr-2"></i>Hafalan
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4 relative">
+                    <div class="relative">
+                        <i class="fas fa-bell text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer relative" id="profileMenuToggle">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1973089b-fe1c-40dd-a6d0-117bffc0113b.png" alt="Foto profil pengguna" class="w-10 h-10 rounded-full border border-gray-300" />
+                        <div class="flex flex-col">
+                            <span class="font-medium text-sm leading-tight">Guru Ahmad</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-500 text-lg"></i>
+
+                         <!-- Profile Dropdown Menu -->
+                         <div id="profileMenu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg hidden z-10 border border-gray-200">
+                            <a href="profil.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-user mr-2"></i>Profil
+                            </a>
+                            <a href="daftar_siswa.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-users mr-2"></i>Daftar Siswa
+                            </a>
+                            <a href="nilai_raport.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-file-alt mr-2"></i>Nilai & Raport
+                            </a>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="#" class="logout-btn block px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 w-full bg-white shadow-lg">
+        <div class="flex justify-around py-3">
+            <a href="beranda.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Beranda</span>
+            </a>
+            <a href="jadwal.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="text-xs mt-1">Jadwal</span>
+            </a>
+            <a href="absensi.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user-check text-xl"></i>
+                <span class="text-xs mt-1">Absensi</span>
+            </a>
+            <a href="hafalan.html" class="flex flex-col items-center text-blue-900">
+                <i class="fas fa-book-quran text-xl"></i>
+                <span class="text-xs mt-1">Hafalan</span>
+            </a>
+            <a href="portal-mlb-admin.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-4">
+        <h2 class="text-2xl font-bold mb-4">Monitoring Hafalan Siswa</h2>
+        <div class="flex flex-col md:flex-row md:items-center mb-6 space-y-4 md:space-y-0 md:space-x-4">
+            <div class="flex items-center">
+                <label for="bulan-hafalan-app" class="font-semibold mr-4">Pilih Bulan:</label>
+                <select id="bulan-hafalan-app" class="p-2 border rounded-lg text-sm"></select>
+            </div>
+            <div class="flex items-center">
+                <label for="kelas-hafalan-app" class="font-semibold mr-4">Pilih Kelas:</label>
+                <select id="kelas-hafalan-app" class="p-2 border rounded-lg text-sm"></select>
+            </div>
+        </div>
+        
+        <div class="monitoring-list-wrapper">
+            <div id="monitoring-list-table-container">
+                <!-- Table will be rendered here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Pastikan path ke database.js sudah benar
+        // Jika database.js tidak ada, Anda bisa menggunakan data dummy seperti sebelumnya
+        // import { studentDB, hafalanDB } from '../js/database.js'; 
+
+        // Dummy data for demonstration if database.js is not available
+        const studentDB = {
+            getAll: () => {
+                let students = JSON.parse(localStorage.getItem('studentsApp') || '[]');
+                if (students.length === 0) {
+                    students = [
+                        { id: 1, name: "Ahmad Fauzi", class: "Kelas A" },
+                        { id: 2, name: "Siti Nurhaliza", class: "Kelas B" },
+                        { id: 3, name: "Budi Santoso", class: "Kelas A" },
+                        { id: 4, name: "Dewi Lestari", class: "Kelas C" },
+                        { id: 5, name: "Cahyo Utomo", class: "Kelas B" },
+                        { id: 6, name: "Fitriani", class: "Kelas A" },
+                        { id: 7, name: "Gatot Subroto", class: "Kelas C" },
+                        { id: 8, name: "Hana Wijaya", class: "Kelas B" },
+                        { id: 9, name: "Irfan Hakim", class: "Kelas A" },
+                        { id: 10, name: "Joko Susilo", class: "Kelas C" }
+                    ];
+                    localStorage.setItem('studentsApp', JSON.stringify(students));
+                }
+                return students;
+            },
+            getUniqueClasses: () => {
+                const students = studentDB.getAll();
+                const classes = new Set(students.map(s => s.class));
+                return Array.from(classes).sort();
+            },
+            key: 'studentsApp'
+        };
+
+        const hafalanDB = {
+            load: () => {
+                return JSON.parse(localStorage.getItem('hafalanApp') || '{}');
+            },
+            save: (data) => {
+                localStorage.setItem('hafalanApp', JSON.stringify(data));
+                synchronizeHafalanSummary(); // Ensure summary is updated on every save
+            },
+            key: 'hafalanApp'
+        };
+        // End of Dummy data
+
+
+        const profileToggle = document.getElementById('profileMenuToggle');
+        const profileMenu = document.getElementById('profileMenu');
+
+        if (profileToggle && profileMenu) {
+            profileToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                profileMenu.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!profileToggle.contains(event.target) && !profileMenu.contains(event.target)) {
+                    profileMenu.classList.add('hidden');
+                }
+            });
+        }
+
+        let students = []; 
+        let hafalanData = {}; 
+
+        const months = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        const daysInMonth = {
+            1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 
+            7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
+        };
+
+        let activeClassHafalan = ''; 
+
+        document.addEventListener('DOMContentLoaded', () => {
+            students = studentDB.getAll(); 
+            hafalanData = hafalanDB.load(); 
+
+            populateMonthDropdownHafalan();
+            populateClassDropdownHafalan();
+            renderMonitoringTable(); 
+            synchronizeHafalanSummary(); // Initial summary sync
+        });
+
+        function populateMonthDropdownHafalan() {
+            const bulanSelect = document.getElementById('bulan-hafalan-app');
+            bulanSelect.innerHTML = ''; 
+
+            months.forEach((bulan, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx + 1;
+                opt.textContent = bulan;
+                bulanSelect.appendChild(opt);
+            });
+
+            const currentMonth = new Date().getMonth() + 1;
+            bulanSelect.value = currentMonth;
+
+            bulanSelect.addEventListener('change', renderMonitoringTable);
+        }
+
+        function populateClassDropdownHafalan() {
+            const kelasSelect = document.getElementById('kelas-hafalan-app');
+            kelasSelect.innerHTML = ''; 
+
+            const uniqueClasses = studentDB.getUniqueClasses();
+            if (uniqueClasses.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'Tidak ada kelas';
+                kelasSelect.appendChild(opt);
+                kelasSelect.disabled = true; 
+            } else {
+                kelasSelect.disabled = false;
+                uniqueClasses.forEach(kelas => {
+                    const opt = document.createElement('option');
+                    opt.value = kelas;
+                    opt.textContent = kelas;
+                    kelasSelect.appendChild(opt);
+                });
+                if (!activeClassHafalan || !uniqueClasses.includes(activeClassHafalan)) {
+                    activeClassHafalan = uniqueClasses[0];
+                }
+                kelasSelect.value = activeClassHafalan;
+            }
+
+            kelasSelect.addEventListener('change', function() {
+                activeClassHafalan = this.value;
+                renderMonitoringTable(); 
+            });
+        }
+
+        function renderMonitoringTable() {
+            const container = document.getElementById('monitoring-list-table-container');
+            container.innerHTML = ''; 
+
+            const bulanAktif = parseInt(document.getElementById('bulan-hafalan-app').value);
+            const kelasAktif = document.getElementById('kelas-hafalan-app').value;
+
+            const filteredStudents = students.filter(student => student.class === kelasAktif);
+
+            // Pastikan hafalanData untuk bulanAktif diinisialisasi
+            if (!hafalanData[bulanAktif]) {
+                hafalanData[bulanAktif] = {};
+            }
+
+            const table = document.createElement('table');
+            // No specific class for table here, styles are applied via element selectors
+
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            // No specific class for trHead here, styles are applied via element selectors
+            
+            const thNama = document.createElement('th');
+            thNama.textContent = 'Nama Siswa';
+            // No specific class for thNama here, styles are applied via element selectors
+            trHead.appendChild(thNama);
+
+            for (let day = 1; day <= daysInMonth[bulanAktif]; day++) {
+                const th = document.createElement('th');
+                th.textContent = day;
+                // No specific class for th here, styles are applied via element selectors
+                trHead.appendChild(th);
+            }
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+
+            if (filteredStudents.length === 0) {
+                container.innerHTML = '<div class="no-data">Tidak ada siswa di kelas ini atau data siswa belum tersedia.</div>';
+                return;
+            }
+            
+            filteredStudents.forEach(student => {
+                const tr = document.createElement('tr');
+                
+                const tdNama = document.createElement('td');
+                tdNama.textContent = student.name;
+                // No specific class for tdNama here, styles are applied via element selectors
+                tr.appendChild(tdNama);
+
+                // Pastikan hafalanData untuk student.id di bulanAktif diinisialisasi
+                if (!hafalanData[bulanAktif][student.id]) {
+                    hafalanData[bulanAktif][student.id] = {};
+                }
+
+                for (let day = 1; day <= daysInMonth[bulanAktif]; day++) {
+                    // Pastikan hafalanData untuk hari di student.id di bulanAktif diinisialisasi
+                    if (!hafalanData[bulanAktif][student.id][day]) {
+                        hafalanData[bulanAktif][student.id][day] = { baru: '', murojaah: '' };
+                    }
+                    
+                    const td = document.createElement('td');
+                    // No specific class for td here, styles are applied via element selectors
+                    
+                    const inputContainer = document.createElement('div');
+                    inputContainer.className = 'input-container';
+
+                    const inputBaru = document.createElement('input');
+                    inputBaru.type = 'text';
+                    inputBaru.placeholder = 'Baru';
+                    inputBaru.value = hafalanData[bulanAktif][student.id][day].baru;
+                    inputBaru.name = `baru-${student.id}-${day}`;
+                    inputBaru.setAttribute('aria-label', `Hafalan baru untuk ${student.name} tanggal ${day}`);
+                    inputBaru.addEventListener('input', function () {
+                        hafalanData[bulanAktif][student.id][day].baru = inputBaru.value;
+                        hafalanDB.save(hafalanData); 
+                    });
+                    inputContainer.appendChild(inputBaru);
+
+                    const inputMurojaah = document.createElement('input');
+                    inputMurojaah.type = 'text';
+                    inputMurojaah.placeholder = 'Murojaah';
+                    inputMurojaah.value = hafalanData[bulanAktif][student.id][day].murojaah;
+                    inputMurojaah.name = `murojaah-${student.id}-${day}`;
+                    inputMurojaah.setAttribute('aria-label', `Hafalan murojaah untuk ${student.name} tanggal ${day}`);
+                    inputMurojaah.addEventListener('input', function () {
+                        hafalanData[bulanAktif][student.id][day].murojaah = inputMurojaah.value;
+                        hafalanDB.save(hafalanData); 
+                    });
+                    inputContainer.appendChild(inputMurojaah);
+
+                    td.appendChild(inputContainer);
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            container.appendChild(table);
+        }
+
+        function synchronizeHafalanSummary() {
+            const summary = [];
+            for (const bulan in hafalanData) {
+                for (const studentId in hafalanData[bulan]) {
+                    let totalBaru = 0;
+                    let totalMurojaah = 0;
+                    const days = hafalanData[bulan][studentId];
+                    for (const day in days) {
+                        // Pastikan days[day] ada sebelum mengakses propertinya
+                        if (days[day] && days[day].baru && days[day].baru.trim() !== '') totalBaru++;
+                        if (days[day] && days[day].murojaah && days[day].murojaah.trim() !== '') totalMurojaah++;
+                    }
+                    summary.push({
+                        id: parseInt(studentId),
+                        totalBaru,
+                        totalMurojaah
+                    });
+                }
+            }
+            localStorage.setItem('hafalanSummary', JSON.stringify(summary));
+        }
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === studentDB.key) {
+                students = studentDB.getAll(); 
+                populateClassDropdownHafalan(); 
+                renderMonitoringTable(); 
+            }
+            if (event.key === hafalanDB.key) {
+                hafalanData = hafalanDB.load(); 
+                renderMonitoringTable(); 
+            }
+        });
+    </script>
+</body>
+</html>

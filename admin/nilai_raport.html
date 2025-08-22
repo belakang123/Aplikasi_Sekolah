@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Input Nilai & Cetak Raport</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f5f7fa;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+    <header class="bg-blue-900 text-white py-4 no-print">
+        <div class="container mx-auto px-4 flex items-center">
+            <button onclick="window.history.back()" class="mr-4 text-white hover:text-gray-300" aria-label="Kembali">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="text-2xl font-bold">Input Nilai & Cetak Raport</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <!-- Search Student -->
+        <section class="mb-6 no-print">
+            <form id="searchForm" class="mb-6 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+                <input type="text" id="searchInput" placeholder="Cari siswa berdasarkan nama atau NISN..." 
+                       class="flex-grow p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
+                    CARI
+                </button>
+            </form>
+        </section>
+
+        <!-- Student Selection -->
+        <section class="mb-6 no-print">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-lg font-semibold mb-4">Pilih Siswa</h2>
+                <select id="studentSelect" class="w-full p-3 border border-gray-300 rounded-lg">
+                    <option value="">-- Pilih Siswa --</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Input Nilai Form -->
+        <section id="inputSection" class="mb-6 no-print hidden">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Input Nilai</h2>
+                <form id="nilaiForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-2">Nama Siswa</label>
+                            <input type="text" id="namaSiswa" class="w-full p-2 border rounded" readonly />
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">NISN</label>
+                            <input type="text" id="nisnSiswa" class="w-full p-2 border rounded" readonly />
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Kelas</label>
+                            <input type="text" id="kelasSiswa" class="w-full p-2 border rounded" readonly />
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Semester</label>
+                            <select id="semester" class="w-full p-2 border rounded">
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <h3 class="font-semibold mb-3">Nilai Mata Pelajaran</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm mb-1">Bahasa Indonesia</label>
+                                <input type="number" min="0" max="100" id="nilaiIndo" class="w-full p-2 border rounded" />
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Matematika</label>
+                                <input type="number" min="0" max="100" id="nilaiMTK" class="w-full p-2 border rounded" />
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">IPA</label>
+                                <input type="number" min="0" max="100" id="nilaiIPA" class="w-full p-2 border rounded" />
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">IPS</label>
+                                <input type="number" min="0" max="100" id="nilaiIPS" class="w-full p-2 border rounded" />
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Bahasa Inggris</label>
+                                <input type="number" min="0" max="100" id="nilaiInggris" class="w-full p-2 border rounded" />
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Agama</label>
+                                <input type="number" min="0" max="100" id="nilaiAgama" class="w-full p-2 border rounded" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <h3 class="font-semibold mb-3">Catatan</h3>
+                        <textarea id="catatan" rows="3" class="w-full p-2 border rounded" placeholder="Masukkan catatan untuk raport..."></textarea>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Simpan Nilai
+                        </button>
+                        <button type="button" onclick="generateRaport()" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            Cetak Raport
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Raport Preview -->
+        <section id="raportPreview" class="hidden">
+            <div id="printArea" class="bg-white p-8 shadow-lg">
+                <div class="text-center mb-6">
+                    <h1 class="text-2xl font-bold">RAPORT SISWA</h1>
+                    <h2 class="text-lg">SEKOLAH DASAR ISLAM TERPADU</h2>
+                    <div class="border-b-2 border-gray-800 my-4"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <p><strong>Nama Siswa:</strong> <span id="printNama"></span></p>
+                        <p><strong>NISN:</strong> <span id="printNISN"></span></p>
+                        <p><strong>Kelas:</strong> <span id="printKelas"></span></p>
+                    </div>
+                    <div>
+                        <p><strong>Semester:</strong> <span id="printSemester"></span></p>
+                        <p><strong>Tahun Ajaran:</strong> <span id="printTahun"></span></p>
+                        <p><strong>Tanggal Cetak:</strong> <span id="printTanggal"></span></p>
+                    </div>
+                </div>
+
+                <table class="w-full border-collapse border border-gray-400 mb-6">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border border-gray-400 px-4 py-2">Mata Pelajaran</th>
+                            <th class="border border-gray-400 px-4 py-2">Nilai</th>
+                            <th class="border border-gray-400 px-4 py-2">Predikat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-400 px-4 py-2">Bahasa Indonesia</td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="printIndo"></td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="predikatIndo"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-400 px-4 py-2">Matematika</td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="printMTK"></td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="predikatMTK"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-400 px-4 py-2">IPA</td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="printIPA"></td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="predikatIPA"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-400 px-4 py-2">IPS</td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="printIPS"></td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="predikatIPS"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-400 px-4 py-2">Bahasa Inggris</td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="printInggris"></td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="predikatInggris"></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-400 px-4 py-2">Agama</td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="printAgama"></td>
+                            <td class="border border-gray-400 px-4 py-2 text-center" id="predikatAgama"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mb-6">
+                    <h3 class="font-semibold mb-2">Catatan Guru:</h3>
+                    <p id="printCatatan" class="border p-4 rounded bg-gray-50"></p>
+                </div>
+
+                <div class="text-center mt-8">
+                    <p class="text-sm text-gray-600">Raport ini dicetak secara otomatis oleh sistem</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script type="module">
+        import { studentDB, gradesDB } from '../js/database.js';
+
+        // Load students from localStorage
+        let students = []; // Akan dimuat dari DB
+        let selectedStudent = null;
+        let grades = {}; // Akan dimuat dari DB
+
+        // Load students into dropdown
+        function loadStudents() {
+            students = studentDB.getAll(); // Muat data siswa
+            const select = document.getElementById('studentSelect');
+            select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} - ${student.class}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Handle student selection
+        document.getElementById('studentSelect').addEventListener('change', function() {
+            const studentId = this.value;
+            if (studentId) {
+                selectedStudent = studentDB.getById(parseInt(studentId)); // Gunakan getById dari DB
+                if (selectedStudent) {
+                    document.getElementById('namaSiswa').value = selectedStudent.name;
+                    document.getElementById('nisnSiswa').value = selectedStudent.nisn;
+                    document.getElementById('kelasSiswa').value = selectedStudent.class;
+                    document.getElementById('inputSection').classList.remove('hidden');
+                    loadExistingGrades(studentId);
+                }
+            } else {
+                document.getElementById('inputSection').classList.add('hidden');
+            }
+        });
+
+        // Handle search
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredStudents = studentDB.getAll().filter(s => // Gunakan getAll dari DB
+                s.name.toLowerCase().includes(searchTerm) || 
+                s.nisn.toLowerCase().includes(searchTerm)
+            );
+            
+            const select = document.getElementById('studentSelect');
+            select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+            filteredStudents.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} - ${student.class}`;
+                select.appendChild(option);
+            });
+        });
+
+        // Load existing grades
+        function loadExistingGrades(studentId) {
+            grades = gradesDB.load(); // Muat data nilai
+            const semester = document.getElementById('semester').value;
+            const key = `${studentId}_${semester}`;
+            
+            if (grades[key]) {
+                const studentGrades = grades[key];
+                document.getElementById('nilaiIndo').value = studentGrades.indo || '';
+                document.getElementById('nilaiMTK').value = studentGrades.mtk || '';
+                document.getElementById('nilaiIPA').value = studentGrades.ipa || '';
+                document.getElementById('nilaiIPS').value = studentGrades.ips || '';
+                document.getElementById('nilaiInggris').value = studentGrades.inggris || '';
+                document.getElementById('nilaiAgama').value = studentGrades.agama || '';
+                document.getElementById('catatan').value = studentGrades.catatan || '';
+            } else {
+                // Clear fields if no existing grades for this student/semester
+                document.getElementById('nilaiIndo').value = '';
+                document.getElementById('nilaiMTK').value = '';
+                document.getElementById('nilaiIPA').value = '';
+                document.getElementById('nilaiIPS').value = '';
+                document.getElementById('nilaiInggris').value = '';
+                document.getElementById('nilaiAgama').value = '';
+                document.getElementById('catatan').value = '';
+            }
+        }
+
+        // Save grades
+        document.getElementById('nilaiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedStudent) {
+                alert('Pilih siswa terlebih dahulu!');
+                return;
+            }
+
+            const semester = document.getElementById('semester').value;
+            const key = `${selectedStudent.id}_${semester}`;
+            
+            const studentGrades = {
+                indo: parseInt(document.getElementById('nilaiIndo').value) || 0,
+                mtk: parseInt(document.getElementById('nilaiMTK').value) || 0,
+                ipa: parseInt(document.getElementById('nilaiIPA').value) || 0,
+                ips: parseInt(document.getElementById('nilaiIPS').value) || 0,
+                inggris: parseInt(document.getElementById('nilaiInggris').value) || 0,
+                agama: parseInt(document.getElementById('nilaiAgama').value) || 0,
+                catatan: document.getElementById('catatan').value
+            };
+
+            grades[key] = studentGrades;
+            gradesDB.save(grades); // Simpan ke DB
+            alert('Nilai berhasil disimpan!');
+        });
+
+        // Calculate predicate
+        function getPredicate(nilai) {
+            if (nilai >= 90) return 'A';
+            if (nilai >= 80) return 'B';
+            if (nilai >= 70) return 'C';
+            if (nilai >= 60) return 'D';
+            return 'E';
+        }
+
+        // Generate raport
+        function generateRaport() {
+            if (!selectedStudent) {
+                alert('Pilih siswa terlebih dahulu!');
+                return;
+            }
+
+            const semester = document.getElementById('semester').value;
+            const key = `${selectedStudent.id}_${semester}`;
+            
+            grades = gradesDB.load(); // Muat data nilai terbaru sebelum cetak
+            if (!grades[key]) {
+                alert('Simpan nilai terlebih dahulu sebelum mencetak raport!');
+                return;
+            }
+
+            const studentGrades = grades[key];
+
+            // Fill raport data
+            document.getElementById('printNama').textContent = selectedStudent.name;
+            document.getElementById('printNISN').textContent = selectedStudent.nisn;
+            document.getElementById('printKelas').textContent = selectedStudent.class;
+            document.getElementById('printSemester').textContent = semester;
+            document.getElementById('printTahun').textContent = new Date().getFullYear() + '/' + (new Date().getFullYear() + 1);
+            document.getElementById('printTanggal').textContent = new Date().toLocaleDateString('id-ID');
+
+            // Fill grades
+            document.getElementById('printIndo').textContent = studentGrades.indo;
+            document.getElementById('printMTK').textContent = studentGrades.mtk;
+            document.getElementById('printIPA').textContent = studentGrades.ipa;
+            document.getElementById('printIPS').textContent = studentGrades.ips;
+            document.getElementById('printInggris').textContent = studentGrades.inggris;
+            document.getElementById('printAgama').textContent = studentGrades.agama;
+
+            // Fill predicates
+            document.getElementById('predikatIndo').textContent = getPredicate(studentGrades.indo);
+            document.getElementById('predikatMTK').textContent = getPredicate(studentGrades.mtk);
+            document.getElementById('predikatIPA').textContent = getPredicate(studentGrades.ipa);
+            document.getElementById('predikatIPS').textContent = getPredicate(studentGrades.ips);
+            document.getElementById('predikatInggris').textContent = getPredicate(studentGrades.inggris);
+            document.getElementById('predikatAgama').textContent = getPredicate(studentGrades.agama);
+
+            // Fill notes
+            document.getElementById('printCatatan').textContent = studentGrades.catatan || '-';
+
+            // Show preview and print
+            document.getElementById('raportPreview').classList.remove('hidden');
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudents();
+            // Add event listener for semester change to reload grades
+            document.getElementById('semester').addEventListener('change', function() {
+                if (selectedStudent) {
+                    loadExistingGrades(selectedStudent.id);
+                }
+            });
+        });
+
+        // Listen for localStorage changes (e.g., if students data changes from daftar_siswa.html)
+        window.addEventListener('storage', (event) => {
+            if (event.key === studentDB.key) {
+                loadStudents(); // Reload students data and re-populate dropdown
+                // If the currently selected student was deleted or changed, reset input section
+                if (selectedStudent && !studentDB.getById(selectedStudent.id)) {
+                    selectedStudent = null;
+                    document.getElementById('studentSelect').value = '';
+                    document.getElementById('inputSection').classList.add('hidden');
+                } else if (selectedStudent) {
+                    // If selected student still exists, reload their details and grades
+                    selectedStudent = studentDB.getById(selectedStudent.id);
+                    document.getElementById('namaSiswa').value = selectedStudent.name;
+                    document.getElementById('nisnSiswa').value = selectedStudent.nisn;
+                    document.getElementById('kelasSiswa').value = selectedStudent.class;
+                    loadExistingGrades(selectedStudent.id);
+                }
+            }
+            if (event.key === gradesDB.key) {
+                grades = gradesDB.load(); // Reload grades data
+                if (selectedStudent) {
+                    loadExistingGrades(selectedStudent.id); // Refresh current student's grades
+                }
+            }
+        });
+    </script>
+</body>
+</html>
